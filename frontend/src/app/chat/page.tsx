@@ -18,11 +18,9 @@ export default function ChatPage() {
       <h2>Conversations</h2>
 
       {conversations.length === 0 && <p>No conversations yet</p>}
-
-      {conversations.map((c: any) => (
-        // console.log("ff");
-        <div key={c.id}>{c.name ?? `Conversation ${c.id}`}</div>
-      ))}
+        {conversations.map((c: any) => (
+          <div key={c.id}>{c.name ?? `Conversation ${c.id}`}</div>
+        ))}
     </div>
   )
 }

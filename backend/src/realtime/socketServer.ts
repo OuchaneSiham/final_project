@@ -10,7 +10,11 @@ export class SocketServer {
 
   init(fastify: FastifyInstance) {
     this.io = new Server(fastify.server, {
-      cors: { origin: "*" },
+    cors: {
+      origin: true,
+      credentials: true,
+    }
+,
     });
 
     this.io.on("connection", (socket) => {

@@ -54,9 +54,16 @@ export function chatController(chatService: ChatService) {
 
     fastify.post("/conversation/:id/message", async (request: any, reply) => {
       try {
+        console.log('BODY:', request.body); //remove it 
         const userId = Number(request.body.userId);
         const conversationId = Number(request.params.id);
         const content = request.body.content;
+
+        if (!userId || !content) {
+            return reply.status(400).send({
+              error: "userId and content are required",
+            });
+        }
 
         const message = await chatService.sendMessage(userId, {
           conversationId,

@@ -83,7 +83,7 @@ export default function ChatPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          senderId: userId,
+          userId: userId,
           content: input,
         }),
       }
@@ -117,15 +117,13 @@ export default function ChatPage() {
       {/* CHAT */}
       <main className="flex-1 flex flex-col">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={`max-w-xs p-2 rounded ${
-                m.senderId === userId
-                  ? 'ml-auto bg-primary text-primary-foreground'
-                  : 'bg-muted'
-              }`}
-            >
+          {messages.map((m, index) => (
+              <div
+                key={m.id ?? `msg-${m.senderId}-${m.createdAt}-${index}`}
+                className={`max-w-xs p-2 rounded ${
+                  m.senderId === userId ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-200'
+                }`}
+              >
               {m.content}
             </div>
           ))}
