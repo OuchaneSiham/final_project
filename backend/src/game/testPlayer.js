@@ -1,0 +1,18 @@
+import Paddle from "./Paddle.js";
+import Player from "./Player.js";
+const testPlayer = new Player("player 1", null);
+console.log("Player ID: ", testPlayer.getPlayerId());
+console.log("Initial Player Score: ", testPlayer.getPlayerScore());
+console.log("Player Paddle: ", testPlayer.getPlayerPaddle());
+testPlayer.incrementScore();
+console.log("Player Score after increment: ", testPlayer.getPlayerScore());
+testPlayer.resetPlayerScore();
+console.log("Player Score after reset: ", testPlayer.getPlayerScore());
+const newPaddle = new Paddle(10, 20, 10, 100, 300);
+testPlayer.setPlayerPaddle(newPaddle);
+console.log("New Player Paddle: ", testPlayer.getPlayerPaddle());
+console.log("New Player Paddle Bounds: ", testPlayer.getPlayerPaddle().getBounds());
+testPlayer.movePaddleUp(0.016);
+console.log("Player Paddle Bounds after moving up: ", testPlayer.getPlayerPaddle().getBounds());
+testPlayer.movePaddleDown(0.016);
+console.log("Player Paddle Bounds after moving down: ", testPlayer.getPlayerPaddle().getBounds());

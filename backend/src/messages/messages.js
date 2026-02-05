@@ -1,0 +1,16 @@
+// Here we have shared protocols
+// or message that the backend and
+// the frontend will use to communicate
+
+export const ClientMessageType = {
+  PLAYER_INPUT: "PLAYER_INPUT",
+  PLAYER_INPUT_STOP: "PLAYER_INPUT_STOP",
+  PLAYER_READY: "PLAYER_READY",
+};
+
+export const ServerMessageType = {
+  ASSIGN_ROLE: "ASSIGN_ROLE",
+  ASSIGN_ID: "ASSIGN_ID",
+  GAME_SNAPSHOT: "GAME_SNAPSHOT",
+  AUTHENTIFICATION: "AUTHENTIFICATION",
+};
