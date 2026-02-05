@@ -22,6 +22,7 @@ function Profile()
   const [searchReqs, setSearchReqs] = useState([]);
   const [pendingReqs, setPendingReqs] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [error, setError] = useState(null);
 
 
   // console.log("DRAFT STATE:", updatedData);
@@ -88,17 +89,19 @@ function Profile()
               const data = await resp.json();
               setUserData(data);
               setUpdatedData(data);
-              console.log(data, "database user1");
+              setError(null);
+              // console.log(data, "database user1");
+              
               // ila kant resposnse mzyana kanakhdo data lijatna mn back kan7toha f object
             }
-            else 
-            {
-                console.log("server error222");
+            else {
+            const data = await resp.json();
+            setError(data.error || "Failed to load profile");
             }
-        }
-        catch(err){
-          console.log("ups something wrong while fetching  the data try again!!");
-        }
+          }
+    catch(err){
+        setError("Network error. Please try again.");
+    }
     }
     fetchProfile();
     fetchPending();
@@ -258,6 +261,7 @@ function Profile()
     return (
         <>
           <div>
+            {error && <div style={{color: 'red'}}>{error}</div>}
             {isEdit ? (
               <>
                 <input

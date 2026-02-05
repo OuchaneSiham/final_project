@@ -3,7 +3,7 @@ const bcrypt = require ('bcrypt');
 const path = require('path');
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client();
-const userController = require("../controllers/user-controller.js");
+// const userController = require("../controllers/user-controller.js");
 const v = require ("validator");
 const { create } = require('domain');
 const fs = require('fs');
@@ -94,12 +94,18 @@ fastify.post("/register", async (request, reply) => {
                     // password: password
                 }
             })
-            if(exist == null)
-            {
-                reply.status(500).send(
-                    {error : "this user doesnt exist in our db! if u didint register yet go to register page or username inccorect!"});
-                return;
-            }
+            // if(exist == null)
+            // {
+            //     reply.status(500).send(
+            //         {error : "this user doesnt exist in our db! if u didint register yet go to register page or username inccorect!"});
+            //     return;
+            // }
+            if(!exist || !(await bcrypt.compare(password, exist.password)))
+                {
+                    return reply.status(401).send({
+                        error: "Invalid username or password"
+                        });
+                }
             console.log("sihammmm", exist);
             const result = await bcrypt.compare(password, exist.password);
             if(result == false)
@@ -205,98 +211,200 @@ fastify.post("/register", async (request, reply) => {
         }
     })
 
-    fastify.patch("/update", {preHandler :[fastify.jwtAuthFun]}, async function (request, reply){
-        console.log("Headers:", request.headers['content-type']);
+    // fastify.patch("/update", {preHandler :[fastify.jwtAuthFun]}, async function (request, reply){
+    //     // console.log("Headers:", request.headers['content-type']);
+    //     if(request.isMultipart())
+    //         {
+    //             console.log("✅ DETECTED! About to parse file...");
+    //             try {
+    //                 const data = await request.file(); 
+    //                 // const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    //                 // if (!allowedTypes.includes(data.mimetype)) {
+    //                 //     return reply.status(400).send({error: "Only image files allowed (jpg, png, gif, webp)"});
+    //                 // }
+    //                 // const maxSize = 5 * 1024 * 1024;
+    //                 // if (data.file.bytesRead > maxSize) {
+    //                 //     return reply.status(400).send({error: "File too large. Maximum size is 5MB"});
+    //                 // }
+    //                 const ext = path.extname(data.filename);
+    //                 const newName = Date.now() + '-' + Math.random().toString(36).substring(7) + ext;
+    //                 // const newFile = Date.now() + '-' + data.filename;
+    //                 const savePath = path.join(__dirname, '..', '..', 'uploads', newName);
+    //                 await pipeline(data.file, fs.createWriteStream(savePath));
+    //                 const avatarurl = "/uploads/" + newFile;
+    //                 const upUser = await prisma.user.update({
+    //                     where:{
+    //                         id: request.user.id
+    //                     },
+    //                     data:{
+    //                         avatar: avatarurl
+    //                     }
+    //                 })
+    //                 console.log("DEBUG: ID value is:", request.user.id, " | ID Type is:", typeof request.user.id);
+    //                 return reply.send({ user:upUser});
+    //                 } catch (e) {
+    //                     console.log("Parsing failed:", e.message);
+    //                     return reply.status(500).send({ error: e.message }); // Add return here!
+    //                 }
+    //         }
+    //         else{
+    //             console.log("✅ NO FILE DETECTED!");
+    //         }
+    //         if(request.body)
+    //         {
+    //                 const {username, email, password} = request.body;
+    //                 const updateData = {};
+    //                 try{
+    //                     if(username)
+    //                     {
+    //                         const  updu = await prisma.user.findUnique({
+    //                             where:{username:username}
+    //                         });
+    //                         if( updu && updu.id != request.user.id)
+    //                             {reply.status(400).send({error: "Username already taken"})
+    //                                 return;}
+    //                                 updateData.username = username;
+    //                     } 
+    //                     if(email)
+    //                         {
+    //                             const  upde = await prisma.user.findUnique({
+    //                                 where:{email:email}
+    //                             });
+    //                             if(upde && upde.id != request.user.id)
+    //                                 {reply.status(400).send({error: "email already taken"});
+    //                                     return;
+    //                                 }
+    //                                 updateData.email = email;
+    //                         }
+    //                         if(password)
+    //                         {
+    //                             if(!v.isStrongPassword(password))
+    //                             {
+    //                                 reply.status(500).send({error: "Password too weak: it must be at least 8 characters, include an uppercase letter, a number, and a symbol."});
+    //                                 return ;
+    //                             }
+    //                             const mysalt =  await bcrypt.genSalt(10);
+    //                             const myhash =  await bcrypt.hash(password, mysalt);
+    //                             updateData.password = myhash;
+    //                         }
+    //                         const newuser = await prisma.user.update({
+    //                             where:{id: request.user.id},
+    //                             data:updateData
+    //                         })
+    //                         reply.status(200).send({
+    //                             newuser
+    //                         });
+    //         }
+    //         catch(err){
+    //             reply.status(500).send({error: "cant update data"});
+    //         }
+    //     }
+    // })
+        fastify.patch("/update", {preHandler :[fastify.jwtAuthFun]}, async function (request, reply){
         if(request.isMultipart())
-            {
-                console.log("✅ DETECTED! About to parse file...");
-                try {
-                    const data = await request.file(); 
-                    console.log("File parsed! Name is:", data?.filename);
-                    const newFile = Date.now() + '-' + data.filename;
-                    const savePath = path.join(__dirname, '..', '..', 'uploads', newFile);
-                    console.log("1. Starting the Pipe...");
-                    const result = await pipeline(data.file, fs.createWriteStream(savePath));
-                    console.log("2. Pipe Finished! Result:", result);
-                    // const avatarurl = "http://localhost:8281/" + newFile;
-                    const avatarurl = "/uploads/" + newFile;
-                    const upUser = await prisma.user.update({
-                        where:{
-                            id: request.user.id
-                        },
-                        data:{
-                            avatar: avatarurl
-                        }
-                    })
-                    console.log("DEBUG: ID value is:", request.user.id, " | ID Type is:", typeof request.user.id);
-                    return reply.send({ user:upUser});
-                    } catch (e) {
-                        console.log("Parsing failed:", e.message);
-                        return reply.status(500).send({ error: e.message }); // Add return here!
-                    }
-            }
-            else{
-                console.log("✅ NO FILE DETECTED!");
-            }
-            if(request.body)
-            {
-                    const {username, email, password} = request.body;
-                    const updateData = {};
-                    try{
-                        if(username)
-                        {
-                            const  updu = await prisma.user.findUnique({
-                                where:{username:username}
-                            });
-                            if( updu && updu.id != request.user.id)
-                                {reply.status(400).send({error: "Username already taken"})
-                                    return;}
-                                    updateData.username = username;
-                        } 
-                        if(email)
-                            {
-                                const  upde = await prisma.user.findUnique({
-                                    where:{email:email}
-                                });
-                                if(upde && upde.id != request.user.id)
-                                    {reply.status(400).send({error: "email already taken"});
-                                        return;
-                                    }
-                                    updateData.email = email;
-                            }
-                            if(password)
-                            {
-                                if(!v.isStrongPassword(password))
-                                {
-                                    reply.status(500).send({error: "Password too weak: it must be at least 8 characters, include an uppercase letter, a number, and a symbol."});
-                                    return ;
-                                }
-                                const mysalt =  await bcrypt.genSalt(10);
-                                const myhash =  await bcrypt.hash(password, mysalt);
-                                updateData.password = myhash;
-                            }
-                            const newuser = await prisma.user.update({
-                                where:{id: request.user.id},
-                                data:updateData
-                            })
-                            reply.status(200).send({
-                                newuser
-                            });
-            }
-            catch(err){
-                reply.status(500).send({error: "cant update data"});
+        {
+            console.log("✅ DETECTED! About to parse file...");
+            try {
+                const data = await request.file();
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(data.mimetype)) {
+                    return reply.status(400).send({error: "Only image files allowed (jpg, png, gif, webp)"});
+                }
+                
+                const ext = path.extname(data.filename);
+                const newName = Date.now() + '-' + Math.random().toString(36).substring(7) + ext;
+                const savePath = path.join(__dirname, '..', '..', 'uploads', newName);
+                
+                await pipeline(data.file, fs.createWriteStream(savePath));
+                
+                const avatarurl = "/uploads/" + newName;
+                const upUser = await prisma.user.update({
+                    where: { id: request.user.id },
+                    data: { avatar: avatarurl }
+                });
+                
+                console.log("✅ Avatar saved:", avatarurl);
+                
+                return reply.send({ 
+                    success: true,
+                    user: upUser
+                });
+                
+            } catch (e) {
+                console.error("❌ File upload error:", e.message);
+                return reply.status(500).send({ error: "Failed to upload avatar" });
             }
         }
-    })
-
+        
+        // ✅ Handle text updates (username, email, password)
+        if(request.body) {
+            const {username, email, password} = request.body;
+            const updateData = {};
+            
+            try {
+                if(username) {
+                    const updu = await prisma.user.findUnique({
+                        where: {username: username}
+                    });
+                    if(updu && updu.id != request.user.id) {
+                        return reply.status(400).send({error: "Username already taken"});
+                    }
+                    updateData.username = username;
+                } 
+                
+                if(email) {
+                    const upde = await prisma.user.findUnique({
+                        where: {email: email}
+                    });
+                    if(upde && upde.id != request.user.id) {
+                        return reply.status(400).send({error: "Email already taken"});
+                    }
+                    updateData.email = email;
+                }
+                
+                if(password) {
+                    if(!v.isStrongPassword(password)) {
+                        return reply.status(400).send({
+                            error: "Password too weak: it must be at least 8 characters, include an uppercase letter, a number, and a symbol."
+                        });
+                    }
+                    const mysalt = await bcrypt.genSalt(10);
+                    const myhash = await bcrypt.hash(password, mysalt);
+                    updateData.password = myhash;
+                }
+                
+                const newuser = await prisma.user.update({
+                    where: {id: request.user.id},
+                    data: updateData
+                });
+                
+                return reply.status(200).send({
+                    success: true,
+                    user: newuser
+                });
+                
+            } catch(err) {
+                console.error(err);
+                return reply.status(500).send({error: "Failed to update data"});
+            }
+        }
+    });
     fastify.get("/search", {preHandler :[fastify.jwtAuthFun]}, async function (request, reply)
     {
         const q =  request.query.q;
         // console.log("here is the query parameter: ",q,"||user request id lets see if the id is correct ", request.user);
         //  console.log("lets see the id inside user request", request.user.id);
         // or const {q} =  request.query;
+
+        if (!q || typeof q !== 'string') {
+            return reply.status(400).send({error: "Invalid search query"});
+        }
+
+        if (q.length > 50) {
+            return reply.status(400).send({error: "Search query too long (max 50 characters)"});
+        }
         try{
-            if(!q || q.length < 2)
+            if(q.length < 2)
             {
                 reply.send([]);
                 return;

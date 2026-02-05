@@ -8,7 +8,7 @@ function Footer() {
             marginTop: "50px",
             textAlign: "center"
         }}>
-            <p>&copy; 2025 ft_transcendence</p>
+            <p>&copy; 2026 ft_transcendence</p>
             <Link to="/privacy" style={{margin: "0 15px"}}>Privacy Policy</Link>
             |
             <Link to="/terms" style={{margin: "0 15px"}}>Terms of Service</Link>
