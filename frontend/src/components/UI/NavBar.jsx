@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 export default function Navbar()
 {
-    const [hasNotification , setHasNotification] = useState();
+    const [hasNotification , setHasNotification] = useState(true);
     // const [NotificationsChecked , setNotificationsChecked] = useState(false); //this state if the user click to see the notifications , if yes than we eill hifde the red button
     
     //when the user clicke the Notification button
@@ -21,12 +21,14 @@ export default function Navbar()
     }
     
     return (
-        <nav className="flex items-center justify-between w-full p-5 h-20 border mt-[3] rounded-[19px] border-[#C77966]/20 bg-[#4A302A] mb-8 ">
-            <div className="flex-1"/>
-            <Logo variant ='Logo'/>
-            <div className="flex-1 flex justify-end items-center gap-9">
+        <nav className="flex items-center justify-between w-full p-5 h-20 border mt-[3] rounded-[19px] border-[#C77966]/20 bg-[#4A302A] mb-8 px-10">
+            <div className="flex-1">
                 <NotifIcone Notificationstate={hasNotification}
-                            onClick={clickNotifictionBell}/>
+                            onClick={clickNotifictionBell}/>        
+            </ div>
+            <Logo variant ='Logo'/>
+            <div className="flex-1 flex justify-end items-center">
+
                 <ProfileIcone />
             </div>
         </nav>

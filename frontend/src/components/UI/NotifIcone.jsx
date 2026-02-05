@@ -4,18 +4,16 @@ import clsx from 'clsx'
 export default function NotifIcone({Notificationstate, changebellState})
 {
     return(
-        <button className='relative h-6 w-6 rounded-full flex items-center justify-center transition-colors'
+        <button className='relative h-6 w-6 rounded-full flex justify-start transition-colors'
                 onClick={changebellState}>
             <img
                 src={notificationIcone}
                 alt="notification button"
                 className=''/>
-            <span
-                className={clsx(
-                     "absolute -top-1 -right-0 h-3 w-3 text-white rounded-full",
-                     Notificationstate ? "bg-red-500" : "" 
-                 )}>
-            </span>
+                <span class="-top-1 -left-2 relative flex size-3">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-300"></span>
+                    <span class="relative inline-flex size-3 rounded-full bg-sky-500"></span>
+                </span>
         </button>
     );
 }
