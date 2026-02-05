@@ -11,7 +11,7 @@ export default function Logo({ variant = 'navbar' })
                 className={clsx(
                     "block",
                     {
-                        'flex-1 block mt-auto h-12 w-auto bg-white-600' : variant === 'Logo',
+                        'flex-1 block mt-auto h-12 w-auto bg-white-600 justify-center' : variant === 'Logo',
                         'w-32 h-auto': variant === 'navbar',
                     }
                 )}/>
