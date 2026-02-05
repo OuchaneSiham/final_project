@@ -1,15 +1,15 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
-import prisma from "./utils/prisma";
-import { SocketServer } from "./realtime/socketServer";
-import { ChatGateway } from "./chat/chatGateway";
-import { ChatService } from "./chat/chatService";
-import { chatController } from "./chat/chatController";
+import { prisma } from "./utils/prisma.js";
+import { SocketServer } from "./realtime/socketServer.js";
+import { ChatGateway } from "./chat/chatGateway.js";
+import { ChatService } from "./chat/chatService.js";
+import { chatController } from "./chat/chatController.js";
+import { prisma } from "./utils/prisma.js";// i add it when i change prisma.js
 
 const fastify = Fastify({ logger: true });
 
 const start = async () => {
-
   await fastify.register(cors, {
     origin: "http://localhost:3000",
   });
@@ -27,3 +27,4 @@ const start = async () => {
 };
 
 start().catch(console.error);
+

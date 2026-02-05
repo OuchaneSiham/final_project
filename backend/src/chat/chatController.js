@@ -1,10 +1,9 @@
-import { FastifyInstance } from "fastify";
-import { ChatService } from "../chat/chatService";
+import { chatService } from "./chatService.js"; // adjust import if using default export
 
-export function chatController(chatService: ChatService) {
-  return async function (fastify: FastifyInstance) {
+export function chatController(chatService) {
+  return async function (fastify) {
 
-    fastify.post("/conversation/create", async (request: any, reply) => {
+    fastify.post("/conversation/create", async (request, reply) => {
       try {
         const { userId, name, type, members } = request.body;
 
@@ -14,12 +13,12 @@ export function chatController(chatService: ChatService) {
         );
 
         return reply.status(200).send(conversation);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });
 
-    fastify.post("/conversation/:id/join", async (request: any, reply) => {
+    fastify.post("/conversation/:id/join", async (request, reply) => {
       try {
         const userId = Number(request.body.userId);
         const conversationId = Number(request.params.id);
@@ -30,13 +29,12 @@ export function chatController(chatService: ChatService) {
         );
 
         return reply.status(200).send(participant);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });
 
-
-    fastify.put("/conversation/:id/leave", async (request: any, reply) => {
+    fastify.put("/conversation/:id/leave", async (request, reply) => {
       try {
         const userId = Number(request.body.userId);
         const conversationId = Number(request.params.id);
@@ -47,22 +45,21 @@ export function chatController(chatService: ChatService) {
         );
 
         return reply.status(200).send(result);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });
 
-    fastify.post("/conversation/:id/message", async (request: any, reply) => {
+    fastify.post("/conversation/:id/message", async (request, reply) => {
       try {
-        console.log('BODY:', request.body); //remove it 
         const userId = Number(request.body.userId);
         const conversationId = Number(request.params.id);
         const content = request.body.content;
 
         if (!userId || !content) {
-            return reply.status(400).send({
-              error: "userId and content are required",
-            });
+          return reply.status(400).send({
+            error: "userId and content are required",
+          });
         }
 
         const message = await chatService.sendMessage(userId, {
@@ -71,30 +68,29 @@ export function chatController(chatService: ChatService) {
         });
 
         return reply.status(200).send(message);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });
 
-
-    fastify.get("/conversation", async (request: any, reply) => {
+    fastify.get("/conversation", async (request, reply) => {
       try {
         const userId = Number(request.query.userId);
 
         const conversations = await chatService.getUserConversations(userId);
 
         return reply.status(200).send(conversations);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });
 
-    fastify.get("/conversation/:id/messages", async (request: any, reply) => {
+    fastify.get("/conversation/:id/messages", async (request, reply) => {
       try {
         const conversationId = Number(request.params.id);
         const messages = await chatService.getConversationMessages(conversationId);
         return reply.status(200).send(messages);
-      } catch (err: any) {
+      } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
     });

@@ -1,20 +1,18 @@
 import { Server } from "socket.io";
-import { FastifyInstance } from "fastify";
 
 export class SocketServer {
-  private io!: Server;
+  constructor() {
+    this.io = null;
+    this.users = new Map();
+    this.onlineUsers = new Set();
+  }
 
-  private users = new Map<number, string>();
-
-  private onlineUsers = new Set<number>();
-
-  init(fastify: FastifyInstance) {
+  init(fastify) {
     this.io = new Server(fastify.server, {
-    cors: {
-      origin: true,
-      credentials: true,
-    }
-,
+      cors: {
+        origin: true,
+        credentials: true,
+      },
     });
 
     this.io.on("connection", (socket) => {
@@ -47,11 +45,11 @@ export class SocketServer {
     return this.io;
   }
 
-  getSocketIdFromUserId(userId: number) {
+  getSocketIdFromUserId(userId) {
     return this.users.get(userId);
   }
 
-  isUserOnline(userId: number) {
+  isUserOnline(userId) {
     return this.onlineUsers.has(userId);
   }
 }

@@ -1,26 +1,27 @@
-import { SocketServer } from "../realtime/socketServer";
-import { Conversation, Participant, Message } from "@prisma/client";
+import { SocketServer } from "../realtime/socketServer.js";
 
 export class ChatGateway {
-  constructor(private socketServer: SocketServer) {}
+  constructor(socketServer) {
+    this.socketServer = socketServer;
+  }
 
-  private roomName(conversationId: number) {
+  roomName(conversationId) {
     return `chatRoom_${conversationId}`;
   }
 
-  private getSocketId(userId: number): string | null {
+  getSocketId(userId) {
     return this.socketServer.getSocketIdFromUserId(userId);
   }
 
-  handleMemberJoinRoomChat(userId: number, conversationId: number) {
+  handleMemberJoinRoomChat(userId, conversationId) {
     this.joinRoom(userId, conversationId);
   }
 
-  handleRemoveSocketIdFromRoom(userId: number, conversationId: number) {
+  handleRemoveSocketIdFromRoom(userId, conversationId) {
     this.leaveRoom(userId, conversationId);
   }
 
-  private joinRoom(userId: number, conversationId: number) {
+  joinRoom(userId, conversationId) {
     const socketId = this.getSocketId(userId);
     if (!socketId) return;
 
@@ -30,7 +31,7 @@ export class ChatGateway {
       .socketsJoin(this.roomName(conversationId));
   }
 
-  private leaveRoom(userId: number, conversationId: number) {
+  leaveRoom(userId, conversationId) {
     const socketId = this.getSocketId(userId);
     if (!socketId) return;
 
@@ -40,22 +41,19 @@ export class ChatGateway {
       .socketsLeave(this.roomName(conversationId));
   }
 
-  handleEmitNewMessage(message: Message) {
+  handleEmitNewMessage(message) {
     this.socketServer
       .getIO()
       .to(this.roomName(message.conversationId))
       .emit("message:new", message);
   }
 
-  handleEmitUpdateConversation(
-    conversation: Conversation & { participants: Participant[] },
-    senderId: number
-  ) {
+  handleEmitUpdateConversation(conversation, senderId) {
     const senderSocket = this.getSocketId(senderId);
 
     const sockets = conversation.participants
       .map(p => this.getSocketId(p.userId))
-      .filter(Boolean) as string[];
+      .filter(Boolean);
 
     this.socketServer
       .getIO()
@@ -64,5 +62,4 @@ export class ChatGateway {
       .emit("conversation:update", conversation);
   }
 }
-
 
