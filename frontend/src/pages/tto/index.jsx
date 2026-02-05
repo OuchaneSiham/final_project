@@ -23,7 +23,7 @@ export default function Tto()
     }
 
     return (
-        <>
+        <div className="min-h-screen bg-black-600 flex items-center justify-center">
             <div>
                 <Square handleClick={() => {handleClick(0)}} value={Squares[0]}></Square>
                 <Square handleClick={() => {handleClick(1)}} value={Squares[1]}></Square>
@@ -39,6 +39,6 @@ export default function Tto()
                 <Square handleClick={() => {handleClick(7)}} value={Squares[7]}></Square>
                 <Square handleClick={() => {handleClick(8)}} value={Squares[8]}></Square>
             </div>
-        </>
+        </div>
     );
 }
