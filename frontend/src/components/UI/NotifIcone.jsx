@@ -1,6 +1,7 @@
 import notificationIcone from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/notificationIcone.png';
+import clsx from 'clsx'
 
-export default function NotifIcone({state = 'off'})
+export default function NotifIcone({Notificationstate})
 {
     return(
         <button className='relative h-6 w-6 rounded-full flex items-center justify-center transition-colors'>
@@ -9,7 +10,10 @@ export default function NotifIcone({state = 'off'})
                 alt="notification button"
                 className=''/>
             <span 
-                class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 text-white rounded-full">
+                className={clsx(
+                     "absolute -top-1 -right-0 h-3 w-3 text-white rounded-full",
+                     Notificationstate ? "bg-red-500" : "" 
+                 )}>
             </span>
         </button>
     );
