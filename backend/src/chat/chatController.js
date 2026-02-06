@@ -1,6 +1,7 @@
-import { chatService } from "./chatService.js"; // adjust import if using default export
+// import { chatService } from "./chatService.js"; // adjust import if using default export
+const chatService = require("./chatService")
 
-export function chatController(chatService) {
+function chatController(chatService) {
   return async function (fastify) {
 
     fastify.post("/conversation/create", async (request, reply) => {
@@ -73,17 +74,30 @@ export function chatController(chatService) {
       }
     });
 
-    fastify.get("/conversation", async (request, reply) => {
-      try {
-        const userId = Number(request.query.userId);
+      fastify.get("/conversation", async (request, reply) => {
+    try {
+      const userId = request.query?.userId
 
-        const conversations = await chatService.getUserConversations(userId);
-
-        return reply.status(200).send(conversations);
-      } catch (err) {
-        return reply.status(400).send({ error: err.message });
+      if (!userId) {
+        return reply.status(400).send({ error: "userId is required" })
       }
-    });
+
+      const parsedUserId = Number(userId)
+
+      if (Number.isNaN(parsedUserId)) {
+        return reply.status(400).send({ error: "userId must be a number" })
+      }
+
+      const conversations =
+        await chatService.getUserConversations(parsedUserId)
+
+      return reply.send(conversations)
+    } catch (err) {
+      console.error(err)
+      return reply.status(500).send({ error: "Internal server error" })
+    }
+  })
+
 
     fastify.get("/conversation/:id/messages", async (request, reply) => {
       try {
@@ -97,3 +111,4 @@ export function chatController(chatService) {
 
   };
 }
+module.exports = chatController;

@@ -1,6 +1,7 @@
-import { SocketServer } from "../realtime/socketServer.js";
+// import { SocketServer } from "../realtime/socketServer.js";
+const {socketServer} = require ("../realtime/socketServer");
 
-export class ChatGateway {
+class ChatGateway {
   constructor(socketServer) {
     this.socketServer = socketServer;
   }
@@ -63,3 +64,4 @@ export class ChatGateway {
   }
 }
 
+module.exports = ChatGateway;

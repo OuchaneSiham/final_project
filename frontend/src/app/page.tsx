@@ -38,9 +38,16 @@ export default function ChatPage() {
     fetch(`${config.API_BASE_URL}/conversation?userId=${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        setConversations(data)
-        if (data.length && !selectedConversationId) {
-          setSelectedConversationId(data[0].id)
+        const convs = Array.isArray(data)
+          ? data
+          : Array.isArray(data.conversations)
+            ? data.conversations
+            : []
+
+        setConversations(convs)
+
+        if (convs.length && !selectedConversationId) {
+          setSelectedConversationId(convs[0].id)
         }
       })
       .catch(console.error)
@@ -97,23 +104,26 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen">
       {/* SIDEBAR */}
-      <aside className="w-64 border-r">
-        {conversations.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => setSelectedConversationId(c.id)}
-            className="w-full p-3 text-left hover:bg-muted"
-          >
-            <p className="font-medium">{c.name ?? `Conversation ${c.id}`}</p>
-            <p className="text-xs text-muted-foreground">
-              {c.updatedAt
-                ? `${formatDistanceToNow(new Date(c.updatedAt))} ago`
-                : '—'}
-            </p>
-          </button>
-        ))}
-      </aside>
-
+        <aside className="w-64 border-r">
+          {Array.isArray(conversations) &&
+            conversations.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setSelectedConversationId(c.id)}
+                className="w-full p-3 text-left hover:bg-muted"
+              >
+                <p className="font-medium">
+                  {c.name ?? `Conversation ${c.id}`}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {c.updatedAt
+                    ? `${formatDistanceToNow(new Date(c.updatedAt))} ago`
+                    : '—'}
+                </p>
+              </button>
+            ))}
+        </aside>
+        
       {/* CHAT */}
       <main className="flex-1 flex flex-col">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">

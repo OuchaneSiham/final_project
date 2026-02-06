@@ -1,6 +1,6 @@
-import { ChatGateway } from "./chatGateway.js";
-
-export class ChatService {
+// import { ChatGateway } from "./chatGateway.js";
+const ChatGateway = require("./chatGateway.js")
+class ChatService {
   constructor(prisma, chatGateway) {
     this.prisma = prisma;
     this.chatGateway = chatGateway;
@@ -47,13 +47,28 @@ export class ChatService {
     return participant;
   }
 
+  // async getConversationMessages(conversationId) {
+  //   return this.prisma.message.findMany({
+  //     where: { conversationId },
+  //     orderBy: { createdAt: "asc" },
+  //     include: { sender: { select: { id: true, username: true } } },
+  //   });
+  // }
   async getConversationMessages(conversationId) {
-    return this.prisma.message.findMany({
-      where: { conversationId },
-      orderBy: { createdAt: "asc" },
-      include: { sender: { select: { id: true, username: true } } },
-    });
-  }
+  return this.prisma.message.findMany({
+    where: { conversationId },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true
+        }
+      }
+    },
+    orderBy: { createdAt: "asc" }
+  })
+}
+
 
   async sendMessage(userId, dto) {
     const message = await this.prisma.message.create({
@@ -96,3 +111,4 @@ export class ChatService {
   }
 }
 
+module.exports = ChatService;
