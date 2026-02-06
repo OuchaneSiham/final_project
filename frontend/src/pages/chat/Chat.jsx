@@ -8,7 +8,7 @@ export default function Chat()
             < Navbar />
             <div className="flex flex-1 rounded-2xl gap-4">
                 <ChatList />
-                <div className="w-4/5 bg-red-300  rounded-2xl">
+                <div className="flex-1 bg-red-300  rounded-2xl">
 
                 </div>
             </div>
