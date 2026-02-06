@@ -28,7 +28,6 @@ export default function Navbar()
             </ div>
             <Logo variant ='Logo'/>
             <div className="flex-1 flex justify-end items-center">
-
                 <ProfileIcone />
             </div>
         </nav>
