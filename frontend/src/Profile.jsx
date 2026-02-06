@@ -355,8 +355,9 @@ function Profile()
               (
                 <div key={fr.id} >
                   {/* <img src={fr.avatar} alt={fr.username}></img> */}
-                                <img 
-                  src={`https://localhost:8443${fr.avatar}`} 
+                  <img 
+                  src={`https://localhost:8443${fr.avatar}`}
+                  loading
                   alt={fr.username}
                   style={{width: "50px", height: "50px", borderRadius: "50%"}}
               />

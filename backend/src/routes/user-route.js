@@ -174,18 +174,18 @@ fastify.post("/register", async (request, reply) => {
                     role: role
                 }
             })
-            const token = fastify.jwt.sign({
+            const sessionToken = fastify.jwt.sign({
                 email: user.email,
                 id : user.id
             } , {expiresIn: "24h"} );
             reply.send({
                 message: "u logged in su",
-                token
+                token: sessionToken
             });
         }
-        catch(error)
-        {
-            reply.status(500).send({error: "login unsuccessfuly!"});
+        catch(error) {
+            console.error("FULL ERROR:", error); // ADD THIS TO DEBUG IN TERMINAL
+            reply.status(500).send({ error: "login unsuccessfuly!", details: error.message });
         }
     })
 
@@ -691,7 +691,7 @@ catch(err) {
         const {username, email, role} = request.body;
         const updateData ={};
         // const allowedRoles = ["moderator", "user"];
-        const allowedRoles = ["user", "moderator"];
+        const allowedRoles = ["user", "moderator", "admin"];
         if (role && !allowedRoles.includes(role)) {
             return reply.status(400).send({ message: "Invalid role. Only 'user' or 'moderator' are allowed." });
         }
