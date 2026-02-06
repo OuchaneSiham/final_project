@@ -1,7 +1,6 @@
 import chatIcone from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/icons/chatIcone.png';
 import face from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/face.jpg';
-import Search from "../../components/UI/Search";
-
+import Contacts from './Contacts';
 
 export default function ChatList()
 {
@@ -22,8 +21,19 @@ export default function ChatList()
             </div>
 
             {/* Converstaions */}
-            <div className='flex-1 bg-white rounded-b-3xl rounded-r-3xl '>
-
+            <div className='flex-1 flex flex-col bg-white rounded-b-3xl rounded-r-3xl p-[16px] gap-2'>
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
+                <Contacts />
             </div>
         </div>
     );
