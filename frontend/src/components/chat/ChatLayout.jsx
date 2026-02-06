@@ -1,26 +1,21 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import ChatWindow from './ChatWindow';
-
-interface Conversation {
-  id: number;
-  name: string | null;
-}
+import React, { useEffect, useState } from 'react'
+import ChatWindow from './ChatWindow'
 
 export default function ChatLayout() {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
-  const userId = 1;
+  const [conversations, setConversations] = useState([])
+  const [selectedConversation, setSelectedConversation] = useState(null)
+  const userId = 1
 
   useEffect(() => {
     fetch(`http://localhost:3001/conversation/user/${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        setConversations(Array.isArray(data) ? data : []);
+        setConversations(Array.isArray(data) ? data : [])
       })
-      .catch(console.error);
-  }, [userId]);
+      .catch(console.error)
+  }, [userId])
 
   return (
     <div className="flex h-screen">
@@ -56,5 +51,5 @@ export default function ChatLayout() {
         )}
       </main>
     </div>
-  );
+  )
 }

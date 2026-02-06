@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from "react";
 import { useSocket } from "./useSocket";
 
 export function useOnlineUsers() {
   const socket = useSocket();
-  const [onlineUsers, setOnlineUsers] = useState<number[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
     if (!socket) return;
 
-    const handleOnline = ({ userId }: { userId: number }) => {
+    const handleOnline = ({ userId }) => {
       setOnlineUsers((prev) =>
         prev.includes(userId) ? prev : [...prev, userId]
       );
     };
 
-    const handleOffline = ({ userId }: { userId: number }) => {
+    const handleOffline = ({ userId }) => {
       setOnlineUsers((prev) => prev.filter((id) => id !== userId));
     };
 

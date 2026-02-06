@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
+import { io } from 'socket.io-client'
 import { config } from '@/lib/config'
 
 export function useSocket() {
-  const socketRef = useRef<Socket | null>(null)
+  const socketRef = useRef(null)
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export function useSocket() {
 
     const socket = io(config.SOCKET_URL, {
       auth: {
-        userId: config.CURRENT_USER_ID, // ✅ REQUIRED
+        userId: config.CURRENT_USER_ID, // required
       },
       transports: ['websocket'],
     })
@@ -42,3 +42,4 @@ export function useSocket() {
 
   return { socket: socketRef.current, isConnected }
 }
+

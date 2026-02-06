@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -7,37 +6,23 @@ import { config } from '@/lib/config'
 import { formatDistanceToNow } from 'date-fns'
 import { Send } from 'lucide-react'
 
-interface Conversation {
-  id: number
-  name?: string | null
-  type?: string
-  updatedAt?: string
-}
-
-
-interface Message {
-  id: number
-  senderId: number
-  content: string
-  createdAt: string
-}
-
 export default function ChatPage() {
   const { socket, isConnected } = useSocket()
   const userId = config.CURRENT_USER_ID
 
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [messages, setMessages] = useState<Message[]>([])
-  const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null)
+  const [conversations, setConversations] = useState([])
+  const [messages, setMessages] = useState([])
+  const [selectedConversationId, setSelectedConversationId] = useState(null)
   const [input, setInput] = useState('')
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef(null)
 
+  // fetch conversations
   useEffect(() => {
     if (!isConnected) return
 
     fetch(`${config.API_BASE_URL}/conversation?userId=${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         const convs = Array.isArray(data)
           ? data
           : Array.isArray(data.conversations)
@@ -53,21 +38,23 @@ export default function ChatPage() {
       .catch(console.error)
   }, [isConnected])
 
+  // fetch messages for selected conversation
   useEffect(() => {
     if (!selectedConversationId) return
 
     fetch(`${config.API_BASE_URL}/conversation/${selectedConversationId}/messages`)
-      .then((res) => res.json())
+      .then(res => res.json())
       .then(setMessages)
       .catch(console.error)
   }, [selectedConversationId])
 
+  // handle incoming socket messages
   useEffect(() => {
     if (!socket) return
 
-    const onNewMessage = (msg: Message) => {
-      setMessages((prev) =>
-        prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]
+    const onNewMessage = (msg) => {
+      setMessages(prev =>
+        prev.some(m => m.id === msg.id) ? prev : [...prev, msg]
       )
     }
 
@@ -77,6 +64,7 @@ export default function ChatPage() {
     }
   }, [socket])
 
+  // scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
@@ -97,54 +85,58 @@ export default function ChatPage() {
     )
 
     const msg = await res.json()
-    setMessages((prev) => [...prev, msg])
+    setMessages(prev => [...prev, msg])
     setInput('')
   }
 
   return (
     <div className="flex h-screen">
       {/* SIDEBAR */}
-        <aside className="w-64 border-r">
-          {Array.isArray(conversations) &&
-            conversations.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedConversationId(c.id)}
-                className="w-full p-3 text-left hover:bg-muted"
-              >
-                <p className="font-medium">
-                  {c.name ?? `Conversation ${c.id}`}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {c.updatedAt
-                    ? `${formatDistanceToNow(new Date(c.updatedAt))} ago`
-                    : '—'}
-                </p>
-              </button>
-            ))}
-        </aside>
-        
+      <aside className="w-64 border-r">
+        {Array.isArray(conversations) &&
+          conversations.map(c => (
+            <button
+              key={c.id}
+              onClick={() => setSelectedConversationId(c.id)}
+              className="w-full p-3 text-left hover:bg-muted"
+            >
+              <p className="font-medium">{c.name ?? `Conversation ${c.id}`}</p>
+              <p className="text-xs text-muted-foreground">
+                {c.updatedAt
+                  ? `${formatDistanceToNow(new Date(c.updatedAt))} ago`
+                  : '—'}
+              </p>
+            </button>
+          ))}
+      </aside>
+
       {/* CHAT */}
       <main className="flex-1 flex flex-col">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((m, index) => (
+          {messages.map((m, index) => {
+            const isMe = m.senderId === userId
+            return (
               <div
                 key={m.id ?? `msg-${m.senderId}-${m.createdAt}-${index}`}
                 className={`max-w-xs p-2 rounded ${
-                  m.senderId === userId ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-200'
+                  isMe ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-200'
                 }`}
               >
-              {m.content}
-            </div>
-          ))}
+                <div className="text-xs opacity-70 mb-1">
+                  {isMe ? 'You' : m.sender?.username ?? `User ${m.senderId}`}
+                </div>
+                <div>{m.content}</div>
+              </div>
+            )
+          })}
           <div ref={bottomRef} />
         </div>
 
         <div className="p-3 border-t flex gap-2">
           <input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && sendMessage()}
             className="flex-1 border rounded px-3"
             placeholder="Message..."
           />

@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/chat/page.jsx", "src/app/chat/[conversationId]/page.jsx", "src/app/chat/layout.jsx", "src/app/layout.jsx", "src/app/page.jsx", "src/components/chat/ChatLayout.jsx", "src/components/chat/ChatWindow.jsx", "src/components/chat/MessageInput.jsx", "src/components/chat/MessageList.jsx", "src/components/ui/Button.jsx", "src/components/ui/Input.jsx", "src/components/ui/Modal.jsx", "src/context/AuthContext.jsx", "src/context/ChatContext.jsx", "src/hooks/useSocket.jsx", "src/hooks/useOnlineUsers.jsx", "src/hooks/useChat.jsx", "src/lib/config.js", "src/services/api/conversation.js", "src/services/api/message.js", "src/services/socket/socket.js", "src/utils/constants.js"  ],
   "exclude": ["node_modules"]
 }

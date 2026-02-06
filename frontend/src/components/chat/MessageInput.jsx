@@ -1,20 +1,12 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-export default function MessageInput({
-  conversationId,
-  userId,
-  onNewMessage,
-}: {
-  conversationId: number;
-  userId: number;
-  onNewMessage: (msg: any) => void;
-}) {
-  const [text, setText] = useState('');
+export default function MessageInput({ conversationId, userId, onNewMessage }) {
+  const [text, setText] = useState('')
 
   const handleSend = async () => {
-    if (!text.trim()) return;
+    if (!text.trim()) return
 
     try {
       const res = await fetch(
@@ -22,21 +14,21 @@ export default function MessageInput({
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, text }),
+          body: JSON.stringify({ userId, content: text }),
         }
-      );
+      )
 
       if (res.ok) {
-        const newMsg = await res.json();
-        onNewMessage(newMsg);
-        setText('');
+        const newMsg = await res.json()
+        onNewMessage(newMsg)
+        setText('')
       } else {
-        console.error('Failed to send message');
+        console.error('Failed to send message')
       }
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
   return (
     <div className="flex p-2 border-t">
@@ -46,6 +38,7 @@ export default function MessageInput({
         placeholder="Type a message..."
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
       />
       <button
         className="ml-2 p-2 bg-blue-500 text-white rounded"
@@ -54,8 +47,9 @@ export default function MessageInput({
         Send
       </button>
     </div>
-  );
+  )
 }
+
 
 
 

@@ -1,9 +1,11 @@
-import { io, Socket } from "socket.io-client";
+
+
+import { io } from "socket.io-client";
 import { API_URL } from "@/utils/constants";
 
-let socket: Socket | null = null;
+let socket = null;
 
-export function connectSocket(userId: number) {
+export function connectSocket(userId) {
   if (socket) return socket;
 
   socket = io(API_URL, {
@@ -25,3 +27,4 @@ export function disconnectSocket() {
     socket = null;
   }
 }
+

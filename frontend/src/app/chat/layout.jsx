@@ -3,13 +3,8 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
-interface Conversation {
-  id: number
-  name: string | null
-}
-
-export default function ChatLayout({ children }: { children: React.ReactNode }) {
-  const [conversations, setConversations] = useState<Conversation[]>([])
+export default function ChatLayout({ children }) {
+  const [conversations, setConversations] = useState([])
   const router = useRouter()
   const userId = 1
 
@@ -20,7 +15,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       .catch(console.error)
   }, [userId])
 
-  const handleSelect = (id: number) => {
+  const handleSelect = (id) => {
     router.push(`/chat/${id}`)
   }
 
@@ -30,7 +25,11 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
         <h2>Conversations</h2>
         {conversations.length === 0 && <p>No conversations yet</p>}
         {conversations.map(c => (
-          <button key={c.id} onClick={() => handleSelect(c.id)} style={{ display: 'block', margin: '4px 0' }}>
+          <button
+            key={c.id}
+            onClick={() => handleSelect(c.id)}
+            style={{ display: 'block', margin: '4px 0' }}
+          >
             {c.name ?? `Conversation ${c.id}`}
           </button>
         ))}
@@ -39,4 +38,5 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
     </div>
   )
 }
+
 
