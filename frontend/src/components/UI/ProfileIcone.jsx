@@ -4,12 +4,12 @@ import { Activity, useState } from 'react';
 
 export default function ProfileIcone({className})
 {
-    const [sideBarShow, setsideBarShow] = useState(false);
+    const [sideBarShow, setsideBarShow] = useState("hidden");
     return (
         <>
         <button className='relative '
                 onClick={()=> setsideBarShow((prev) => !prev)}>
-            <div className='h-12 w-12 rounded-full hover:scale-125 transition duration-350 ease-in-out overflow-hidden'>
+            <div className='h-12 w-12 rounded-full transition duration-350 ease-in-out overflow-hidden'>
                 <img   src={face}
                     alt="testing img"
                     className='h-full w-full object-cover'>
@@ -18,9 +18,7 @@ export default function ProfileIcone({className})
                     <DropDown/>
                 </Activity>
             </div>
-
         </button>
-
         </>
     );
 }
