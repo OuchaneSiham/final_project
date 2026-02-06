@@ -73,7 +73,12 @@ function AdminUsers() {
                 <h2>All Users ({users.length})</h2>
                 {users.map(user => (
                     <div key={user.id} style={{border: "1px solid gray", margin: "10px", padding: "10px"}}>
-                        <img src={user.avatar} width="50" alt={user.username} />
+                        {/* <img src={user.avatar} width="50" alt={user.username} /> */}
+                         <img 
+                            src={`https://localhost:8443${user.avatar}`} 
+                            width="50" 
+                            alt={user.username} 
+                        />
                         <p><strong>Username:</strong> {user.username}</p>
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Role:</strong> {user.role}</p>

@@ -88,7 +88,8 @@ function Profile()
               {
               const data = await resp.json();
               setUserData(data);
-              setUpdatedData(data);
+              // setUpdatedData(data);
+              setUpdatedData({ ...data, password: "" });
               setError(null);
               // console.log(data, "database user1");
               
@@ -191,11 +192,13 @@ function Profile()
         if(resp.ok)
           {
             const data = await resp.json();
-            setUserData(data);
+            const userObj = data.user || data;
+            setUserData(userObj);
             setEdit(false);
             // setUpdatedData(data);
-            setUpdatedData({ ...data, password: "" });
-            console.log(data, "database user2");
+            setUpdatedData({ ...userObj, password: "" });
+            // console.log(data, "database user2");
+            console.log("Profile updated successfully!");
           }
           else{
             console.log("server error111");
@@ -304,7 +307,12 @@ function Profile()
                 <button onClick={() => setEdit(true)}>Edit Profile</button>
               </>
             )}
-            <img src={userData.avatar} alt="Profile Avatar" />
+            {/* <img src={userData.avatar} alt="Profile Avatar" /> */}
+            <img 
+                src={`https://localhost:8443${userData.avatar}`} 
+                alt="Profile Avatar" 
+                style={{width: "150px", height: "150px", objectFit: "cover", borderRadius: "50%"}}
+            />
             <br></br>
               <div>
                 <h3>pending requests ({pendingReqs.length})</h3>
@@ -312,7 +320,12 @@ function Profile()
                 (
                   pendingReqs.map((req) => (
                     <div key={req.id}>
-                      <img src={req.requester.avatar}></img>
+                      {/* <img src={req.requester.avatar}></img> */}
+                                        <img 
+                      src={`https://localhost:8443${req.requester.avatar}`}
+                      alt={req.requester.username}
+                      style={{width: "50px", height: "50px", borderRadius: "50%"}}
+                  />
                       <span>{req.requester.username}</span>
                       <button onClick={() => handleAccept(req.id)}>accept</button>
                       <button onClick={() => handleDecline(req.id)}>decline</button>
@@ -341,7 +354,12 @@ function Profile()
               (friends.map((fr) =>
               (
                 <div key={fr.id} >
-                  <img src={fr.avatar} alt={fr.username}></img>
+                  {/* <img src={fr.avatar} alt={fr.username}></img> */}
+                                <img 
+                  src={`https://localhost:8443${fr.avatar}`} 
+                  alt={fr.username}
+                  style={{width: "50px", height: "50px", borderRadius: "50%"}}
+              />
                   <span>{fr.username}</span>
                   {fr.isOnline? (<span>🟢 Online</span>):
                   (<span>🔴 Offline</span>)
