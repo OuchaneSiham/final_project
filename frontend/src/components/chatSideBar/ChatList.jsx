@@ -22,18 +22,7 @@ export default function ChatList()
 
             {/* Converstaions */}
             <div className='flex-1 flex flex-col bg-white rounded-b-3xl rounded-r-3xl p-[16px] gap-2'>
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
-                <Contacts />
+            
             </div>
         </div>
     );
