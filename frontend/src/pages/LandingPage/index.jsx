@@ -1,5 +1,6 @@
 import Players from '../../assets/LandingPageAssets/Players.png';
 import Logo from '../../components/UI/Logo';
+import Language from '../../components/UI/Languages';
 
 export default function Landing()
 {
@@ -10,6 +11,7 @@ export default function Landing()
                 alt="background"
                 className="absolute inset-0 h-full w-full object-cover -z-10"
             />
+                <Language />
             <div className="flex flex-col items-center gap-8 -mt-50">
                 <Logo variant='Landing'/>
                 <p className='text-4xl md:text-5xl font-bold text-amber-50 tracking-wide drop-shadow-lg'>
