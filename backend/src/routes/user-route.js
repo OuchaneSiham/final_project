@@ -8,11 +8,11 @@ const v = require ("validator");
 const { create } = require('domain');
 const fs = require('fs');
 const { pipeline } = require('stream/promises');
-async function getNewUserRole() 
-{
-    const userCount = await prisma.user.count();
-    return userCount === 0 ? "admin" : "user";
-}
+// async function getNewUserRole() 
+// {
+//     const userCount = await prisma.user.count();
+//     return userCount === 0 ? "admin" : "user";
+// }
 
 async function routes(fastify, options) {
     fastify.get("/admin/users",{ preHandler: [fastify.jwtAuthFun, fastify.verifyAdmin] }, async function (request, reply) 
@@ -49,17 +49,14 @@ fastify.post("/register", async (request, reply) => {
     }
     
     try {
-        const role = await getNewUserRole();
         const mysalt = await bcrypt.genSalt(10);
         const myhash = await bcrypt.hash(password, mysalt);
-        
-        // ✅ NEW: Include role in creation
         const user = await prisma.user.create({
             data: {
                 username, 
                 email, 
                 password: myhash,
-                role: role 
+                role: "user"
             }
         });
         
@@ -155,7 +152,7 @@ fastify.post("/register", async (request, reply) => {
             }
             // console.log(payloadn, payloade, payloadsub);
             // Determine role for new users (first user = admin)
-            const role = await getNewUserRole();
+            // const role = await getNewUserRole();
 
             const user = await prisma.user.upsert({
                 where:{
@@ -171,7 +168,7 @@ fastify.post("/register", async (request, reply) => {
                     username:finalUsername,
                     googleId: payloadsub,
                     isOnline: true,
-                    role: role
+                    role: "user"
                 }
             })
             const sessionToken = fastify.jwt.sign({
@@ -693,7 +690,7 @@ catch(err) {
         // const allowedRoles = ["moderator", "user"];
         const allowedRoles = ["user", "moderator", "admin"];
         if (role && !allowedRoles.includes(role)) {
-            return reply.status(400).send({ message: "Invalid role. Only 'user' or 'moderator' are allowed." });
+            return reply.status(400).send({ message: "Invalid role. Allowed roles: user, moderator, admin" });
         }
                 if(targetId === adminId)
         {
