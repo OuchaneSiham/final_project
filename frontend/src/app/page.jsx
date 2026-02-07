@@ -98,7 +98,7 @@ export default function ChatPage() {
             <button
               key={c.id}
               onClick={() => setSelectedConversationId(c.id)}
-              className="w-full p-3 text-left hover:bg-muted"
+              className="w-full p-3 text-left hover:bg-blue"
             >
               <p className="font-medium">{c.name ?? `Conversation ${c.id}`}</p>
               <p className="text-xs text-muted-foreground">

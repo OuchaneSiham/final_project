@@ -46,28 +46,20 @@ class ChatService {
     this.chatGateway.handleMemberJoinRoomChat(userId, conversationId);
     return participant;
   }
-
-  // async getConversationMessages(conversationId) {
-  //   return this.prisma.message.findMany({
-  //     where: { conversationId },
-  //     orderBy: { createdAt: "asc" },
-  //     include: { sender: { select: { id: true, username: true } } },
-  //   });
-  // }
   async getConversationMessages(conversationId) {
-  return this.prisma.message.findMany({
-    where: { conversationId },
-    include: {
-      sender: {
-        select: {
-          id: true,
-          username: true
+    return this.prisma.message.findMany({
+      where: { conversationId },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            username: true
+          }
         }
-      }
-    },
-    orderBy: { createdAt: "asc" }
-  })
-}
+      },
+      orderBy: { createdAt: "asc" }
+    })
+  }
 
 
   async sendMessage(userId, dto) {
@@ -109,6 +101,23 @@ class ChatService {
     this.chatGateway.handleRemoveSocketIdFromRoom(userId, conversationId);
     return { success: true };
   }
+
+  async blockUser(blockerId, blockedId) {
+    return prisma.blockedUser.create({
+      data: {
+        blockerId,
+        blockedId,
+      },
+    });
+  }
+
+  async getBlockedUsers(userId) {
+    return prisma.blockedUser.findMany({
+      where: { blockerId: userId },
+      include: { blocked: { select: { id: true, username: true } } },
+    });
+  }
+
 }
 
 module.exports = ChatService;

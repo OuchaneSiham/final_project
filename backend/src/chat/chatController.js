@@ -51,6 +51,38 @@ function chatController(chatService) {
       }
     });
 
+        // Block a user
+    fastify.post("/user/:userId/block", async (req, reply) => {
+      const blockerId = Number(req.body.blockerId); // current user
+      const blockedId = Number(req.params.userId);
+
+      if (!blockerId || !blockedId) {
+        return reply.status(400).send({ error: "Invalid user IDs" });
+      }
+
+      try {
+        const block = await chatService.blockUser(blockerId, blockedId);
+        return reply.send(block);
+      } catch (err) {
+        return reply.status(400).send({ error: err.message });
+      }
+    });
+
+    // Get blocked users
+    fastify.get("/user/:userId/blocked", async (req, reply) => {
+      const userId = Number(req.params.userId);
+
+      if (!userId) return reply.status(400).send({ error: "userId required" });
+
+      try {
+        const blocked = await chatService.getBlockedUsers(userId);
+        return reply.send(blocked);
+      } catch (err) {
+        return reply.status(500).send({ error: err.message });
+      }
+    });
+
+
     fastify.post("/conversation/:id/message", async (request, reply) => {
       try {
         const userId = Number(request.body.userId);
