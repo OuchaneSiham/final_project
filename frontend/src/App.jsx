@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-// import Tto from './pages/tto/index.jsx';
-import GameLobby from './pages/GameLobby/index';
 import Chat from "./pages/chat/Chat";
+import Landing from "./pages/LandingPage";
+
 function App() {
   return (
 
@@ -10,7 +10,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Tto />} /> */}
           {/* <Route path="/GameLobby" element={<GameLobby />} /> */}
-          <Route path="/Chat" element={<Chat />} />
+          <Route path="/" element={<Landing />} />
         </Routes>
 
       </div>
