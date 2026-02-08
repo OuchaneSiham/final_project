@@ -4,7 +4,7 @@ import userIcone from '../../assets/icons/user.svg';
 export default function FriendBox({userFace, status ="offline", userName})
 {
     return (
-        <li className="relative flex p-5 border-2 border-purple-500/30 gap-4 items-center h-[80px] w-[350px] bg-slate-800/95 border rounded-lg border border-slate-600/50 hover:border-slate-500 transition-all">
+        <li className="relative flex p-5 border-2 border-purple-500/30 gap-4 drop-shadow-md items-center h-[84px] min-w-[400px]  bg-amber-900/40 border rounded-3xl border border-slate-600/50 hover:border-slate-500 transition-all">
             {/* for the image and the status */}
             <div className='relative h-15 w-15' >
                 <div className='relative h-15 w-15 rounded-full ease-in-out overflow-hidden '>
@@ -23,7 +23,7 @@ export default function FriendBox({userFace, status ="offline", userName})
                 {userName}
             </p>
             {/*For visit Profile botton*/}
-            <button className='ml-auto text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 rounded-full p-2 transition'>
+            <button className='ml-auto rounded-full p-2 transition'>
                 <img src={userIcone} alt="Profile access icone"
                         />
             </button>
