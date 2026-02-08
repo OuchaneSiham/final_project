@@ -19,37 +19,21 @@ function chatController(chatService) {
       }
     });
 
-    fastify.post("/conversation/:id/join", async (request, reply) => {
-      try {
-        const userId = Number(request.body.userId);
-        const conversationId = Number(request.params.id);
+    fastify.post("/conversation", async (req, reply) => {
+      const { userId, otherUserId } = req.body;
 
-        const participant = await chatService.joinConversation(
-          userId,
-          conversationId
-        );
-
-        return reply.status(200).send(participant);
-      } catch (err) {
-        return reply.status(400).send({ error: err.message });
+      if (!userId || !otherUserId) {
+        return reply.status(400).send({ error: "userId and otherUserId required" });
       }
+
+      const conversation = await chatService.getOrCreateConversation(
+        Number(userId),
+        Number(otherUserId)
+      );
+
+      return reply.send(conversation);
     });
 
-    fastify.put("/conversation/:id/leave", async (request, reply) => {
-      try {
-        const userId = Number(request.body.userId);
-        const conversationId = Number(request.params.id);
-
-        const result = await chatService.leaveConversation(
-          userId,
-          conversationId
-        );
-
-        return reply.status(200).send(result);
-      } catch (err) {
-        return reply.status(400).send({ error: err.message });
-      }
-    });
 
         // Block a user
     fastify.post("/user/:userId/block", async (req, reply) => {
@@ -63,6 +47,23 @@ function chatController(chatService) {
       try {
         const block = await chatService.blockUser(blockerId, blockedId);
         return reply.send(block);
+      } catch (err) {
+        return reply.status(400).send({ error: err.message });
+      }
+    });
+
+    // Unblock a user
+    fastify.post("/user/:userId/unblock", async (req, reply) => {
+      const blockerId = Number(req.body.blockerId); // current user
+      const blockedId = Number(req.params.userId);
+
+      if (!blockerId || !blockedId) {
+        return reply.status(400).send({ error: "Invalid user IDs" });
+      }
+
+      try {
+        const unblock = await chatService.unblockUser(blockerId, blockedId);
+        return reply.send({ message: "User unblocked successfully" });
       } catch (err) {
         return reply.status(400).send({ error: err.message });
       }
@@ -129,7 +130,6 @@ function chatController(chatService) {
       return reply.status(500).send({ error: "Internal server error" })
     }
   })
-
 
     fastify.get("/conversation/:id/messages", async (request, reply) => {
       try {

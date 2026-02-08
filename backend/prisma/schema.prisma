@@ -12,8 +12,10 @@ model User {
   email    String? @unique
   password String?
 
-  messages     Message[]
-  participants Participant[]
+  messages Message[]
+
+  conversationsAsUser1 Conversation[] @relation("User1Conversations")
+  conversationsAsUser2 Conversation[] @relation("User2Conversations")
 
   blockedUsers BlockedUser[] @relation("BlockedUsers")
   blockedBy    BlockedUser[] @relation("BlockedBy")
@@ -35,16 +37,19 @@ model BlockedUser {
 }
 
 model Conversation {
-  id       Int              @id @default(autoincrement())
-  name     String?
-  type     ConversationType
-  isPublic Boolean          @default(true)
-  password String? // hashed (for protected channels)
+  id Int @id @default(autoincrement())
 
-  messages     Message[]
-  participants Participant[]
+  user1Id Int
+  user2Id Int
+
+  user1 User @relation("User1Conversations", fields: [user1Id], references: [id])
+  user2 User @relation("User2Conversations", fields: [user2Id], references: [id])
+
+  messages Message[]
 
   createdAt DateTime @default(now())
+
+  @@unique([user1Id, user2Id])
 }
 
 model Message {
@@ -57,30 +62,4 @@ model Message {
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-}
-
-model Participant {
-  id             Int @id @default(autoincrement())
-  userId         Int
-  conversationId Int
-
-  role   ParticipantRole @default(MEMBER)
-  muted  Boolean         @default(false)
-  banned Boolean         @default(false)
-
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, conversationId])
-}
-
-enum ConversationType {
-  DIRECT // DM
-  GROUP // Public / private / protected channel
-}
-
-enum ParticipantRole {
-  OWNER
-  ADMIN
-  MEMBER
 }
