@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/ochangli/Desktop/tictactoe/frontend/src/app/chat/page.jsx"],"sourcesContent":["\"use client\"\n\nimport { useEffect, useState } from \"react\"\n\nexport default function ChatPage() {\n  const [conversations, setConversations] = useState([])\n\n  useEffect(() => {\n    fetch(\"http://localhost:3001/conversation?userId=1\")\n      .then(res => res.json())\n      .then(setConversations)\n      .catch(console.error)\n  }, [])\n\n  return (\n    <div>\n      <h2>Conversations</h2>\n\n      {conversations.length === 0 && <p>No conversations yet</p>}\n\n      {conversations.map(c => (\n        <div key={c.id}>{c.name ?? `Conversation ${c.id}`}</div>\n      ))}\n    </div>\n  )\n}\n\n\n\n\n\n\n\n\n"],"names":[],"mappings":";;;;;AAEA;;;AAFA;;AAIe,SAAS;;IACtB,MAAM,CAAC,eAAe,iBAAiB,GAAG,IAAA,qLAAQ,EAAC,EAAE;IAErD,IAAA,sLAAS;8BAAC;YACR,MAAM,+CACH,IAAI;sCAAC,CAAA,MAAO,IAAI,IAAI;qCACpB,IAAI,CAAC,kBACL,KAAK,CAAC,QAAQ,KAAK;QACxB;6BAAG,EAAE;IAEL,qBACE,yMAAC;;0BACC,yMAAC;0BAAG;;;;;;YAEH,cAAc,MAAM,KAAK,mBAAK,yMAAC;0BAAE;;;;;;YAEjC,cAAc,GAAG,CAAC,CAAA,kBACjB,yMAAC;8BAAgB,EAAE,IAAI,IAAI,CAAC,aAAa,EAAE,EAAE,EAAE,EAAE;mBAAvC,EAAE,EAAE;;;;;;;;;;;AAItB;GArBwB;KAAA"}}]
+}
