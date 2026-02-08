@@ -9,7 +9,7 @@ class SocketServer {
   init(fastify) {
     this.io = new Server(fastify.server, {
       cors: {
-        origin: true,
+        origin: ["http://localhost:5173"],
         credentials: true,
       },
     });

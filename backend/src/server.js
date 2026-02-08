@@ -19,8 +19,12 @@ const  chatController = require("./chat/chatController.js");
 // const fastify = Fastify({ logger: true });
 
 const start = async () => {
-  await fastify.register(cors, {
-    origin: "http://localhost:3000",
+  // await fastify.register(cors, {
+  //   origin: "http://localhost:3000",
+  // });
+    await fastify.register(cors, {
+    origin: ["http://localhost:5173", "http://localhost:3000"],
+    credentials: true,
   });
 
   const socketServer = new SocketServer();
