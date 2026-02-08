@@ -27,17 +27,15 @@ class ChatService {
 
   async getOrCreateConversation(userId, otherUserId) {
     // block check
-    const blocked = await this.prisma.blockedUser.findFirst({
+    const blockedByOther = await this.prisma.blockedUser.findFirst({
       where: {
-        OR: [
-          { userId, blockedUserId: otherUserId },
-          { userId: otherUserId, blockedUserId: userId }
-        ]
+        userId: otherUserId,
+        blockedUserId: userId
       }
     });
 
-    if (blocked) {
-      throw new Error("You cannot chat with this user");
+    if (blockedByOther) {
+      throw new Error("You are blocked by this user");
     }
 
     let conversation = await this.prisma.conversation.findFirst({
@@ -79,40 +77,41 @@ class ChatService {
 
 
   async sendMessage(userId, dto) {
-    // Check if the sender is blocked by the recipient
-    const conversation = await this.prisma.conversation.findUnique({
-      where: { id: dto.conversationId },
-      include: { user1: true, user2: true }
-    });
+  const conversation = await this.prisma.conversation.findUnique({
+    where: { id: dto.conversationId },
+    include: { user1: true, user2: true }
+  });
 
-    const recipientId = conversation.user1Id === userId ? conversation.user2Id : conversation.user1Id;
+  if (!conversation) throw new Error("Conversation not found");
 
-    const isBlocked = await this.prisma.blockedUser.findFirst({
-      where: {
-        OR: [
-          { userId: userId, blockedUserId: recipientId },
-          { userId: recipientId, blockedUserId: userId }
-        ]
-      }
-    });
+  // Identify recipient
+  const recipientId = conversation.user1Id === userId ? conversation.user2Id : conversation.user1Id;
 
-    if (isBlocked) {
-      throw new Error("You cannot send messages to this user (blocked).");
+  const senderBlocked = await this.prisma.blockedUser.findFirst({
+    where: {
+      userId: userId,
+      blockedUserId: recipientId
     }
+  });
 
-    const message = await this.prisma.message.create({
-      data: {
-        content: dto.content,
-        senderId: userId,
-        conversationId: dto.conversationId,
-      },
-      include: { sender: { select: { id: true, username: true } } },
-    });
-
-    this.chatGateway.handleEmitNewMessage(message);
-
-    return message;
+  if (senderBlocked) {
+    throw new Error("You cannot send messages to this user because you blocked them.");
   }
+
+  const message = await this.prisma.message.create({
+    data: {
+      content: dto.content,
+      senderId: userId,
+      conversationId: dto.conversationId,
+    },
+    include: { sender: { select: { id: true, username: true } } },
+  });
+
+  this.chatGateway.handleEmitNewMessage(message);
+
+  return message;
+}
+
 
 
   async getUserConversations(userId) {
@@ -131,12 +130,35 @@ class ChatService {
     });
   }
 
+  // async blockUser(blockerId, blockedId) {
+  //   return this.prisma.blockedUser.create({
+  //     data: { userId: blockerId, blockedUserId: blockedId }
+  //   });
+  // }
   async blockUser(blockerId, blockedId) {
-    return this.prisma.blockedUser.create({
-      data: { userId: blockerId, blockedUserId: blockedId }
-    });
-  }
+  const existing = await this.prisma.blockedUser.findFirst({
+    where: {
+      userId: blockerId,
+      blockedUserId: blockedId
+    }
+  });
 
+  if (existing) return existing;
+
+  return this.prisma.blockedUser.create({
+    data: { userId: blockerId, blockedUserId: blockedId }
+  });
+}
+
+
+  // async unblockUser(blockerId, blockedId) {
+  //   return this.prisma.blockedUser.deleteMany({
+  //     where: {
+  //       userId: blockerId,
+  //       blockedUserId: blockedId
+  //     }
+  //   });
+  // }
   async unblockUser(blockerId, blockedId) {
     return this.prisma.blockedUser.deleteMany({
       where: {

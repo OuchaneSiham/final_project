@@ -1,6 +1,7 @@
+
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001";
+export const BASE_URL = "http://localhost:3001";
 
 export const getConversations = async (userId) => {
   const res = await axios.get(`${BASE_URL}/conversation?userId=${userId}`);
@@ -19,3 +20,20 @@ export const sendMessage = async (conversationId, userId, content) => {
   });
   return res.data;
 };
+
+// 🔹 Add these
+export const blockUser = async (blockerId, blockedId) => {
+  const res = await axios.post(`${BASE_URL}/user/${blockedId}/block`, { blockerId });
+  return res.data;
+};
+
+export const unblockUser = async (blockerId, blockedId) => {
+  const res = await axios.post(`${BASE_URL}/user/${blockedId}/unblock`, { blockerId });
+  return res.data;
+};
+
+export const getBlockedUsers = async (userId) => {
+  const res = await axios.get(`${BASE_URL}/user/${userId}/blocked`);
+  return res.data;
+};
+
