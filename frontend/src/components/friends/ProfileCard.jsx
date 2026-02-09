@@ -3,7 +3,7 @@ import close from '../../assets/icons/close.png'
 export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?img=1', friendMath=4 , friendWins=30 , friendLoses=2 ,friendNmae="Ochangli" , onClose})
 {
     return(
-        <div className="relative  w-[90%] rounded-3xl h-[300px] min-w-[500px] mx-auto max-w-[650px] bg-[#FFF2DF] ">
+        <div className="relative  w-[90%] rounded-3xl min-h-[300px] min-w-[500px] mx-auto max-w-[650px] bg-[#FFF2DF] px-10 py-4">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-28 w-28 z-10">
                 <div className='h-full w-full rounded-full overflow-hidden border-4 border-white shadow-lg'>
                     <img   src={friendAvatar}
@@ -25,6 +25,16 @@ export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?i
                 <p className="text-3xl font-bold text-amber-900 text-center pt-20 mb-2 tracking-wide">
                     {friendNmae}
                 </p>
+            </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
+                </div>
+                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
+                </div>
+                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
+                </div>
+                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
+                </div>
             </div>
         </div>
     );
