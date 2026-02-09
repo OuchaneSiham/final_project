@@ -8,9 +8,7 @@ function App() {
 
       <div>
         <Routes>
-          {/* <Route path="/" element={<Tto />} /> */}
-          {/* <Route path="/GameLobby" element={<GameLobby />} /> */}
-          <Route path="/" element={<Friend />} />
+          <Route path="/" element={<Chat />} />
         </Routes>
 
       </div>
