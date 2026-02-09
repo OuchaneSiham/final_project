@@ -30,11 +30,10 @@ export default function ProfileCard({friend, onClose})
                     <img   src={close}
                         alt="red close button"
                         className='h-full w-full object-cover'>
-                        
                     </img>
                 </button>
             <div>
-                <p className="text-3xl font-bold text-amber-900 text-center pt-20 mb-2 tracking-wide">
+                <p className="text-3xl font-bold text-amber-900 text-center pt-15 pb-10 mb-2 tracking-wide">
                     {friend.userName}
                 </p>
             </div>

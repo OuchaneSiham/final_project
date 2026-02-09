@@ -21,10 +21,20 @@ export default function Friend()
                 Friends
             </p>
             {/* rendring the friend card if it is delected */}
-            {friendSeleted && <ProfileCard 
-                    friend={friendSeleted}
-                    onClose={() => setfriendSeleted(null)}
-                />}
+            {friendSeleted && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div 
+                        className="absolute inset-0" 
+                        onClick={() => setfriendSeleted(null)}>
+                    </div>
+                    <div className="relative z-10 w-full max-w-lg"> 
+                        <ProfileCard 
+                            friend={friendSeleted} 
+                            onClose={() => setfriendSeleted(null)} 
+                        />
+                    </div>
+                </div>)}
+            
             <div className="flex flex-wrap justify-center gap-4">
                 {friends.map((friend) =>(
                     <FriendBox
