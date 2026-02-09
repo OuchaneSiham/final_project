@@ -1,6 +1,6 @@
 import FriendBox from "../../components/friends/FriendBox";
 import ProfileCard from "../../components/friends/ProfileCard.jsx";
-import Navbar from "../../components/UI/NavBar";
+import Navbar from '../../components/UI/NavBar';
 import { useState } from 'react';
 import { mockFriends } from './mockFriends.js';
 
@@ -10,10 +10,7 @@ export default function Friend()
     const [friends, setFriends] = useState(mockFriends);
     const [friendSeleted, setfriendSeleted] = useState(null);
 
-    const handleViewProfile = (friend) =>
-    {
 
-    }
     return (
         <div className="flex items-center flex-col min-h-screen bg-[#3E2522]/90 py-[5px] px-[20px] overflow-y-auto">
             <Navbar/>

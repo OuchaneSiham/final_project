@@ -15,7 +15,7 @@ export default function ProfileCard({friend, onClose})
     };
     return(
         <div className="relative  w-[90%] rounded-3xl min-h-[300px] min-w-[500px] mx-auto max-w-[650px] bg-[#FFF2DF] px-10 py-4">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-28 w-28 z-10">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-28 w-28 z-10"> {/* ?? */}
                 <div className='h-full w-full rounded-full overflow-hidden border-4 border-white shadow-lg'>
                     <img   src={friend.userFace}
                         alt="User profile image"
