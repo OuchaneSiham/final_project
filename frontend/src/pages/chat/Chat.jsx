@@ -9,7 +9,7 @@ import FriendAvt from '../../components/chat/friendAvatar.jsx';
 
 export default function Chat()
 {
-    const [selectedUserId, setSelectedUserId] = useState(0);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const [friends, setFriends] = useState(mockFriends);
 
     console.log(selectedUserId);
@@ -32,19 +32,18 @@ export default function Chat()
                             )
                         )}
                     </div>
-
-                     {/*Converstaion*/}
+                    {selectedUserId && (
                     <div className="flex flex-1 flex-col w-full bg-gray-200 rounded-2xl pt-6">
                         {/* Header section */}
                         <div className=" flex items-center gap-3 px-6 py-4 pb-7 border-b  border-red-400">
                             <img 
-                                src={friends[selectedUserId].userFace}
-                                alt={friends[selectedUserId].userName}
+                                src={friends[selectedUserId - 1].userFace}
+                                alt={friends[selectedUserId - 1].userName}
                                 className="w-14 h-14 rounded-full object-cover ring-2 ring-white"
                             />
                             <div className="flex-1">
                                 <h3 className="text-white font-semibold text-lg">
-                                    {friends[selectedUserId].userName}
+                                    {friends[selectedUserId - 1].userName}
                                 </h3>
                             </div>
                         </div>
@@ -56,6 +55,8 @@ export default function Chat()
                             <button className="w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-600 text-white flex items-center justify-centertransition-allhover:scale-105"></button>
                         </div>
                     </div>
+                    )}
+                     {/*Converstaion*/}
                 </div>
             </div>
         );
