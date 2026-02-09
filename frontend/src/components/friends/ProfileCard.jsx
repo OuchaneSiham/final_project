@@ -1,4 +1,5 @@
 import close from '../../assets/icons/close.png'
+import StatBox from './StatBox'
 
 export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?img=1', friendMath=4 , friendWins=30 , friendLoses=2 ,friendNmae="Ochangli" , onClose})
 {
@@ -27,14 +28,10 @@ export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?i
                 </p>
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
-                </div>
-                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
-                </div>
-                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
-                </div>
-                <div className='w-full h-[50px] bg-blue-500 rounded-2xl '>
-                </div>
+                <StatBox label='Wins' value={10}/>
+                <StatBox label='Match Played' value={10}/>
+                <StatBox label='Loses' value={10}/>
+                <StatBox label='Wins Rate' value={`${(10 / 10) * 100}%`}/>
             </div>
         </div>
     );
