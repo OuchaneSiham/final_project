@@ -1,4 +1,4 @@
-
+import close from '../../assets/icons/close.png'
 
 export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?img=1', friendMath=4 , friendWins=30 , friendLoses=2 ,friendNmae="Ochangli" , onClose})
 {
@@ -11,9 +11,16 @@ export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?i
                         className='h-full w-full object-cover'>
                     </img>
                 </div>
-                <div className="absolute bg-green-500 h-5 w-5 rounded-full border-2 border-white bottom-0 right-0">
+                {/* close buttn */}
+                <div className="absolute bg-green-500 h-5 w-5 rounded-full border-2 border-white bottom-1 right-2">
                 </div>
             </div>
+            <button className="hover:bg-amber-200/50 absolute h-12 w-12 top-4 right-4 rounded-full z-20">
+                    <img   src={close}
+                        alt="red close button"
+                        className='h-full w-full object-cover'>
+                    </img>
+                </button>
             <div>
                 <p className="text-3xl font-bold text-amber-900 text-center pt-20 mb-2 tracking-wide">
                     {friendNmae}
