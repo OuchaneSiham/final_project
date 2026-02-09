@@ -22,6 +22,7 @@ export default function Friend()
             </p>
             {/* rendring the friend card if it is delected */}
             {friendSeleted && <ProfileCard 
+                    friend={friendSeleted}
                     onClose={() => setfriendSeleted(null)}
                 />}
             <div className="flex flex-wrap justify-center gap-4">

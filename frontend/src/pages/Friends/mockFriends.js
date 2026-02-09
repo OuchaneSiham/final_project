@@ -4,60 +4,90 @@ export const mockFriends = [
     id: '1',
     userName: 'Ochangli',
     userFace: 'https://i.pravatar.cc/150?img=1', // or use a URL
-    status: 'online'
+    status: 'online',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '2',
     userName: 'ohmane',
     userFace: 'https://i.pravatar.cc/150?img=2',
-    status: 'offline'
+    status: 'offline',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '3',
     userName: 'Ahmed',
     userFace: 'https://i.pravatar.cc/150?img=3',
-    status: 'away'
+    status: 'away',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '4',
     userName: 'Fatima',
     userFace: 'https://i.pravatar.cc/150?img=4',
-    status: 'online'
+    status: 'online',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '5',
     userName: 'Youssef',
     userFace: 'https://i.pravatar.cc/150?img=5',
-    status: 'offline'
+    status: 'offline',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '6',
     userName: 'Sara',
     userFace: 'https://i.pravatar.cc/150?img=6',
-    status: 'online'
+    status: 'online',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '7',
     userName: 'Karim',
     userFace: 'https://i.pravatar.cc/150?img=7',
-    status: 'away'
+    status: 'away',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '8',
     userName: 'Nadia',
     userFace: 'https://i.pravatar.cc/150?img=8',
-    status: 'online'
+    status: 'online',
+    wins: 10,
+    Loses: 1,
+    MatchPlaye:11,
   },
   {
     id: '9',
     userName: 'Hassan',
     userFace: 'https://i.pravatar.cc/150?img=9',
-    status: 'offline'
+    status: 'offline',
+    wins: 5,
+    Loses: 1,
+    MatchPlaye:6,
   },
   {
     id: '10',
     userName: 'Amina',
     userFace: 'https://i.pravatar.cc/150?img=10',
-    status: 'online'
+    status: 'online',
+    wins: 5,
+    Loses: 10,
+    MatchPlaye:30,
   }
 ];
