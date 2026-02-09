@@ -1,6 +1,6 @@
 import Navbar from "../../components/UI/NavBar";
 import ChatList from "../../components/chatSideBar/ChatList"; 
-import face from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/face.jpg';
+import face from '../../assets/images/face.jpg'
 import Contacts from "../../components/chatSideBar/Contacts";
 
 export default function Chat()

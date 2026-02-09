@@ -1,5 +1,5 @@
-import chatIcone from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/icons/chatIcone.png';
-import face from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/face.jpg';
+import chatIcone from '../../assets/icons/chatIcone.png'
+import face from '../../assets/images/face.jpg';
 import Contacts from './Contacts';
 
 export default function ChatList()

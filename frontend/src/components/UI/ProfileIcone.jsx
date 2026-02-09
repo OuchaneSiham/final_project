@@ -1,4 +1,4 @@
-import face from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/face.jpg';
+import face from '../../assets/images/face.jpg';
 import DropDown from './DropDown';
 import { Activity, useState } from 'react';
 

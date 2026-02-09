@@ -15,7 +15,7 @@ export default function Friend()
             <p className="text-3xl font-bold text-amber-100 tracking-wide mb-6 drop-shadow-lg">
                 Friends
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
                 {friends.map((friend) =>(
                     <FriendBox userFace={friend.userFace}
                         userName={friend.userName}

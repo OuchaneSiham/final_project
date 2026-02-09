@@ -1,4 +1,4 @@
-import notificationIcone from '/Users/ochangli/Desktop/tictactoe/frontend/src/assets/images/notificationIcone.png';
+import notificationIcone from '../../assets/images/notificationIcone.png';
 import clsx from 'clsx'
 
 export default function NotifIcone({Notificationstate, changebellState})

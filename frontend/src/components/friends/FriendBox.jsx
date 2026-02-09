@@ -1,5 +1,5 @@
 import userIcone from '../../assets/icons/user.svg';
-
+import StatusIndicator from '../UI/StatusIndicator';
 
 export default function FriendBox({userFace, status ="offline", userName})
 {
@@ -9,8 +9,6 @@ export default function FriendBox({userFace, status ="offline", userName})
                     return 'bg-green-500';
                 case 'offline':
                     return 'bg-gray-400';
-                case 'away':
-                    return 'bg-yellow-500';
                 default:
                     return 'bg-gray-400';
             }
@@ -27,6 +25,7 @@ export default function FriendBox({userFace, status ="offline", userName})
                         </img>
                     </div>
                 </div>
+            <StatusIndicator getStatusColor={getStatusColor}/>
             <div className={`absolute ${getStatusColor()} z-10 h-4 w-4 rounded-full border-2 border-[#3E3D38] bottom-0 right-0`}>
             </div>
             </div>
