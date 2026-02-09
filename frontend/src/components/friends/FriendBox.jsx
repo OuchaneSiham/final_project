@@ -1,11 +1,10 @@
 import userIcone from '../../assets/icons/user.svg';
 import StatusIndicator from '../UI/StatusIndicator';
 
-
-export default function FriendBox({userFace, status ="offline", userName, onClick})
+export default function FriendBox({friend, onClick})
 {
     const getStatusColor = () => {
-            switch(status) {
+            switch(friend.status) {
                 case 'online':
                     return 'bg-green-500';
                 case 'offline':
@@ -20,7 +19,7 @@ export default function FriendBox({userFace, status ="offline", userName, onClic
             <div className='relative h-15 w-15' >
                 <div className='relative h-15 w-15 rounded-full ease-in-out overflow-hidden '>
                     <div>
-                        <img   src={userFace}
+                        <img   src={friend.userFace}
                                 alt="user face"
                                 className='h-full w-full object-cover'>
                         </img>
@@ -32,7 +31,7 @@ export default function FriendBox({userFace, status ="offline", userName, onClic
             </div>
             {/*For the user name*/}
             <p className='text-orange-200 font-bold text-xl tracking-wide'>
-                {userName}
+                {friend.userName}
             </p>
             {/*For visit Profile botton*/}
             <button className='ml-auto rounded-full p-2 transition' onClick={onClick}>

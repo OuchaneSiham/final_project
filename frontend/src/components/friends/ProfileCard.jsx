@@ -16,10 +16,11 @@ export default function ProfileCard({friendAvatar = 'https://i.pravatar.cc/150?i
                 <div className="absolute bg-green-500 h-5 w-5 rounded-full border-2 border-white bottom-1 right-2">
                 </div>
             </div>
-            <button className="hover:bg-amber-200/50 absolute h-12 w-12 top-4 right-4 rounded-full z-20">
+            <button className="hover:bg-amber-200/50 absolute h-12 w-12 top-4 right-4 rounded-full z-20" onClick={onClose}>
                     <img   src={close}
                         alt="red close button"
                         className='h-full w-full object-cover'>
+                        
                     </img>
                 </button>
             <div>

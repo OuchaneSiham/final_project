@@ -8,7 +8,7 @@ import { mockFriends } from './mockFriends.js';
 export default function Friend()
 {
     const [friends, setFriends] = useState(mockFriends);
-    const [friendSeleted, setfriendSeleted] = useState(true);
+    const [friendSeleted, setfriendSeleted] = useState(null);
 
     const handleViewProfile = (friend) =>
     {
@@ -22,18 +22,18 @@ export default function Friend()
             </p>
             {/* rendring the friend card if it is delected */}
             {friendSeleted && <ProfileCard 
+                    onClose={() => setfriendSeleted(null)}
                 />}
-            {/* Friend infos compo
             <div className="flex flex-wrap justify-center gap-4">
                 {friends.map((friend) =>(
-                    <FriendBox userFace={friend.userFace}
-                        userName={friend.userName}
-                        status={friend.status}
-                        onClick={() => {alert("hello")}} 
+                    <FriendBox
+                        key={friend.id}
+                        friend={friend}
+                        onClick={() => setfriendSeleted(friend)}
                     />
                 )
                 )}
-            </div> */}
+            </div>
         </div>
     );
 }
