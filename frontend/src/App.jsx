@@ -203,7 +203,7 @@ PLAYER MODE (WAITING / READY)
     );
   }
 
-  if (me.ready && !opponentReady) {
+  if (me.ready && !opponentReady && gameState.status === "WAITING_OPPONENT") {
     return <PlayerWaiting />;
   }
 

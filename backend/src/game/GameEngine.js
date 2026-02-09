@@ -28,6 +28,7 @@ class GameEngine {
   isAIEnabled = false; // THis controls whether the ai should take the control
   // of player2
   aiDifficulty = "normal";
+  aiTimer = 0; // Timer to control AI reaction time
   constructor() {
     // Initialize ball and paddles with starting
     // positions and speeds.
@@ -163,13 +164,45 @@ class GameEngine {
     const paddle = this.player2.getPlayerPaddle();
     const ball = this.ball.getState();
 
+    // CURRENT POSITION
     const paddleCenter = paddle.y + paddle.height / 2;
-    const tolerance = 20; // Use this to push AI to do mistakes
-    // If not it will be too good and impossible to win against it
-    if (ball.y > paddleCenter + tolerance) {
-      paddle.moveDown(deltaTime);
-    } else if (ball.y < paddleCenter - tolerance) {
-      paddle.moveUp(deltaTime);
+
+    // AI CONFIG
+    // We add a tolerance or dead zone around the paddle center
+    // to prevent the AI from making constant small adjustments
+    // when the ball is near the center of the paddle. This makes
+    // the AI movement smoother and more natural, instead of jittery
+    // when the ball is close to the paddle center. The tolerance
+    // value can be adjusted to make the AI more or less responsive.
+    const tolerance = 20;
+    const aiSpeed = 0.8; // AI reaction speed (0 to 1, where 1 is instant reaction or perfect)
+    const reactionTime = 0.10; // Time in seconds before the AI reacts to the ball movement
+    const maxError = 25; // Maximum error in pixels to simulate imperfection.
+    // TIMER REACTION
+    this.aiTimer += deltaTime;
+    if (this.aiTimer < reactionTime) {
+      return; // Not yet time for the AI to react
+    }
+    this.aiTimer = 0; // Reset the timer after reacting
+
+    let targetY; // Target Y position for the paddle to move towards
+    if (this.ball.getVelocity().vx > 0) {
+      // If the ball is moving towards the AI paddle, target the ball's Y position with some error
+      const error = Math.random() - 0.5 * maxError; // Random error to make the AI less perfect
+      targetY = ball.y + error;
+    } else {
+      // If the ball is moving away, return to the center of the field
+      targetY = this.fieldHeight / 2;
+    }
+    // AI MOVEMENT
+    if (targetY > paddleCenter + tolerance) {
+      if (paddle.getBounds().y + paddle.getBounds().height < this.fieldHeight) {
+        paddle.moveDown(deltaTime * aiSpeed); // Scale movement by aiSpeed to make it less perfect
+      }
+    } else if (targetY < paddleCenter - tolerance) {
+      if (paddle.getBounds().y > 0) {
+        paddle.moveUp(deltaTime * aiSpeed);
+      }
     }
   }
   touchPaddle(paddle) {
