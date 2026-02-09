@@ -1,7 +1,8 @@
 import userIcone from '../../assets/icons/user.svg';
 import StatusIndicator from '../UI/StatusIndicator';
 
-export default function FriendBox({userFace, status ="offline", userName})
+
+export default function FriendBox({userFace, status ="offline", userName, onClick})
 {
     const getStatusColor = () => {
             switch(status) {
@@ -34,7 +35,7 @@ export default function FriendBox({userFace, status ="offline", userName})
                 {userName}
             </p>
             {/*For visit Profile botton*/}
-            <button className='ml-auto rounded-full p-2 transition'>
+            <button className='ml-auto rounded-full p-2 transition' onClick={onClick}>
                 <img src={userIcone} alt="Profile access icone"
                         />
             </button>
