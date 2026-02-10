@@ -1,40 +1,48 @@
 import Navbar from "../../components/UI/NavBar";
 import { mockFriends } from "../Friends/mockFriends";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FriendAvt from '../../components/chat/friendAvatar.jsx';
-
-// import ChatList from "../../components/chatSideBar/ChatList"; 
-// import face from '../../assets/images/face.jpg'
-// import Contacts from "../../components/chatSideBar/Contacts";
-
-// export default function Sidebar() {
-//     const users = Array.from({ length: 20 })
-  
-//     return (
-//       <div className="h-screen w-24 bg-[#1f1f1f] flex flex-col items-center py-4">
-        
-//         {/* Scrollable container */}
-//         <div className="flex-1 w-full overflow-y-auto space-y-4 px-2 scrollbar-thin scrollbar-thumb-gray-600">
-//           {users.map((_, i) => (
-//             <img
-//               key={i}
-//               src="https://i.pravatar.cc/100"
-//               alt="avatar"
-//               className="w-14 h-14 rounded-full object-cover mx-auto cursor-pointer hover:scale-105 transition"
-//             />
-//           ))}
-//         </div>
-  
-//       </div>
-//     )
-//   }
+import Spiner from "../../components/UI/Spiner.jsx";
+import { getContacts, getMessages } from "../../Services/chat/api.js";
 
 export default function Chat()
 {
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [friends, setFriends] = useState(mockFriends);
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    console.log(selectedUserId);
+    {/* A use effect for the contact side bar Runs only at the start */}
+    useEffect( () =>
+    {
+        const loadSidebar = async () => {
+        try {
+            const data = await getContacts();
+            setFriends(data);
+            setLoading(false); // Stop loading once data is here
+        }
+        catch (error) {
+            console.error("Failed to load contacts", error);
+        }
+    };
+        loadSidebar();
+    }, []);
+
+    // --- EFFECT 2: Load Messages (Runs when activeChatId CHANGES) ---
+
+    useEffect(() => {
+        // If no user is selected yet, don't do anything
+        if (!selectedUserId) return;
+
+        const loadConversation = async () => {
+        setMessages([]); // Optional: Clear old messages immediately so user doesn't see stale data
+        const chatData = await getMessages(selectedUserId);
+        setMessages(chatData);
+        };
+
+        loadConversation();
+    }, [selectedUserId]); //
+
     return(
             <div className="flex flex-col items-center h-screen bg-gradient-to-br from-[#3B2F2F] via-[#7E5C4A] to-[#F2D7B6] py-4 gap-4 px-6">
                 <Navbar/>
