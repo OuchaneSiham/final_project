@@ -188,23 +188,30 @@ function Profile() {
         } catch (err) { console.error(err); }
     };
 
-    useEffect(() => {
-        const getToken = localStorage.getItem("token");
-        if (!getToken) { navigate("/login"); return; }
-        
-        const fetchProfile = async () => {
-            try {
-                const resp = await fetch(urlme, {
-                    headers: { "Authorization": "Bearer " + getToken }
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    setUserData(data);
-                    setUpdatedData({ ...data, password: "" });
+                useEffect(() => {
+                    const getToken = localStorage.getItem("token");
+                    if (!getToken) { navigate("/login"); return; }
+                    
+                const fetchProfile = async () => {
+                try {
+                    const resp = await fetch(urlme, {
+                        headers: { "Authorization": "Bearer " + getToken }
+                    });
+                    console.log("Profile Fetch Status:", resp.status);
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        setUserData(data);
+                        setUpdatedData({ ...data, password: "" });
+                    } else if (resp.status === 401) {
+                        console.log("Token invalid, redirecting...");
+                        localStorage.removeItem("token");
+                        navigate("/login");
+                    }
+                } catch (err) { 
+                    console.error("Fetch Profile Error:", err);
+                    setError("Network error."); 
                 }
-            } catch (err) { setError("Network error."); }
-        };
-
+            };
         fetchProfile();
         fetchPending();
         fetchFriends();
