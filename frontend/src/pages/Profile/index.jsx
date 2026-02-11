@@ -1,5 +1,8 @@
 import Navbar from "../../components/UI/NavBar";
 import ProfileHead from "../../components/Profile/ProfileHeader";
+import ProfileStatistics from "../../components/Profile/ProfileStatistics";
+import PersonlInfos from "../../components/Profile/PersonlInfos";
+
 export default function Profile()
 {
     return(
@@ -9,10 +12,12 @@ export default function Profile()
                 Profile
             </p>
 
-            <div className="flex flex-row flex-1  bg-[#3E2522]/90 rounded-2xl w-full gap-x-[9px] p-3">
+            <div className="flex flex-row flex-1  bg-[#3E2522]/90 rounded-2xl w-full gap-x-[9px] p-3 min-h-0">
                 {/* left side profile*/}
-                <aside className="w-3/4 flex-1 bg-white rounded-3xl bg-gradient-to-br from-[#b67a49] via-[#cfa46d] to-[#e6e3a3]">
+                <aside className="flex flex-col w-3/4 space-y-2 flex-1 bg-white rounded-3xl bg-gradient-to-br from-[#b67a49] via-[#cfa46d] to-[#e6e3a3 space-y-">
                     <ProfileHead />
+                    <PersonlInfos/>
+                    <ProfileStatistics />
                 </aside>
                 {/* right side for friends*/}
                 <aside className="w-1/4 bg-white rounded-2xl">
