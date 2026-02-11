@@ -21,7 +21,7 @@ export default function Navbar()
     }
     
     return (
-        <nav className="flex items-center justify-between w-full h-[60px] border mt-3 rounded-[19px] border-[#C77966]/20 bg-[#4A302A] mb-5 px-10">
+        <nav className="flex items-center justify-between w-full h-[60px] border mt-3 rounded-[19px] border-[#C77966]/20 bg-[#4A302A] mb-6 px-10">
             <div className="flex-1">
                 <NotifIcone Notificationstate={hasNotification}
                             onClick={clickNotifictionBell}/>        
