@@ -1,8 +1,8 @@
-import FriendBox from "../../components/friends/FriendBox";
-import ProfileCard from "../../components/friends/ProfileCard.jsx";
+import FriendBox from "../../components/Profile/FriendBox.jsx";
+import ProfileCard from "../../components/Profile/ProfileCard.jsx";
 import Navbar from '../../components/UI/NavBar';
 import { useState } from 'react';
-import { mockFriends } from './mockFriends.js';
+import { mockFriends } from "../Profile/mockFriends.js";
 
 
 export default function Friend()

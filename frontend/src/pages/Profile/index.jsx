@@ -2,9 +2,16 @@ import Navbar from "../../components/UI/NavBar";
 import ProfileHead from "../../components/Profile/ProfileHeader";
 import ProfileStatistics from "../../components/Profile/ProfileStatistics";
 import PersonlInfos from "../../components/Profile/PersonlInfos";
-
+import { mockFriends } from "./mockFriends";
+import FriendBox from "../../components/Profile/FriendBox";
+import { useState } from "react";
+import ProfileCard from "../../components/Profile/ProfileCard";
 export default function Profile()
 {
+
+    const [friends, setFriends] = useState(mockFriends);
+    const [friendSeleted, setfriendSeleted] = useState(null);
+
     return(
         <div className="flex items-center h-screen flex-col h-screen bg-[#3E2522]/90 py-[5px] px-[20px]">
             <Navbar/>
@@ -20,8 +27,36 @@ export default function Profile()
                     <ProfileStatistics />
                 </aside>
                 {/* right side for friends*/}
-                <aside className="w-1/4 bg-white rounded-2xl">
-
+                <aside className="flex flex-col h-full w-1/4 bg-white rounded-2xl overflow-y-auto min-h-0 space-y-3">
+                    {/* For pending requests */}
+                    
+                    <div className="flex flex-col h-2/3 bg-yellow-100 items-center py-4 overflow-y-auto min-h-0">
+                    {friendSeleted && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                            <div 
+                                className="absolute inset-0" 
+                                onClick={() => setfriendSeleted(null)}>
+                            </div>
+                            <div className="relative z-10 w-full max-w-lg"> 
+                                <ProfileCard 
+                                    friend={friendSeleted} 
+                                    onClose={() => setfriendSeleted(null)} 
+                                />
+                            </div>
+                        </div>)}
+                        <h3>Friends</h3>
+                        {friends.map((friend) =>(
+                            <FriendBox
+                                key={friend.id}
+                                friend={friend}
+                                onClick={() => setfriendSeleted(friend)}
+                            />)
+                        )}
+                    </div>
+                    {/* For Friends */}
+                    <div className="flex flex-col h-1/3 bg-yellow-100 items-center py-4 ">
+                        <h3>Pending Requests</h3>
+                    </div>
                 </aside>
             </div>
         </div>

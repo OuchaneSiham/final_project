@@ -14,7 +14,7 @@ export default function FriendBox({friend, onClick})
             }
         };
     return (
-        <li className="relative flex p-5 border-2 border-purple-500/30 gap-4 drop-shadow-md items-center h-[84px] min-w-[400px]  bg-amber-900/40 border rounded-3xl border border-slate-600/50 hover:border-slate-500 transition-all">
+        <li className="relative flex p-5 border-2 border-purple-500/30 gap-4 drop-shadow-md my-1 items-center h-[84px] min-w-[400px]  bg-amber-900/40 border rounded-3xl border border-slate-600/50 hover:border-slate-500 transition-all">
             {/* for the image and the status */}
             <div className='relative h-15 w-15' >
                 <div className='relative h-15 w-15 rounded-full ease-in-out overflow-hidden '>

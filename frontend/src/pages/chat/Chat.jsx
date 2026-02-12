@@ -1,5 +1,5 @@
 import Navbar from "../../components/UI/NavBar";
-import { mockFriends } from "../Friends/mockFriends";
+import { mockFriends } from "../Profile/mockFriends.js";
 import { useState } from 'react';
 import FriendAvt from '../../components/chat/friendAvatar.jsx';
 
