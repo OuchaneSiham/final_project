@@ -4,6 +4,7 @@ import Chat from "./pages/chat/Chat";
 import Landing from "./pages/LandingPage";
 import Friend from "./pages/Friends";
 import Profile from "./pages/Profile";
+
 function App() {
   return (
 
