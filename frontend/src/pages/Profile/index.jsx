@@ -12,7 +12,7 @@ export default function Profile()
 
     const [friends, setFriends] = useState(mockFriends);
     const [friendSeleted, setfriendSeleted] = useState(null);
-
+    const [updatedData, setUpdatedData] = useState({});
     const [isEdit, setEdit] = useState(false); // The user trigger the Edit Profile button.
 
     return(
@@ -25,7 +25,7 @@ export default function Profile()
             {isEdit && (
                 
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <ProfileEdit onAvatarChange={() => alert("canging avatar")}/>
+                        <ProfileEdit />
                 </div>)}
 
             <div className="flex flex-row flex-1  bg-[#3E2522]/90 rounded-2xl w-full gap-x-[9px] p-3 min-h-0">
@@ -54,13 +54,13 @@ export default function Profile()
                             </div>
                         </div>)}
                         <h3>Friends</h3>
-                        {friends.map((friend) =>(
+                        {/* {friends.map((friend) =>(
                             <FriendBox
                                 key={friend.id}
                                 friend={friend}
                                 onClick={() => setfriendSeleted(friend)}
                             />)
-                        )}
+                        )} */}
                     </div>
                     {/* For Friends */}
                     <div className="flex flex-col h-1/3 bg-yellow-100 items-center py-4 ">
