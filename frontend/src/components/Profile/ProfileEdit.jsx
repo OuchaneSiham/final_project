@@ -30,7 +30,7 @@ export default function ProfileEdit({ userData, updatedData, setUpdatedData, onS
 
                         {/* for the inputs files (username, password, email ...)*/}
                         
-                        <div className='rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none flex flex-col bg-white gap-1 p-6  px-4 items-start '>
+                        <div className='w-full max-w-sm sm:max-w-md lg:max-w-lg rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none flex flex-col bg-white gap-1 p-6  px-4 items-start '>
                             {/* Usename Section */}
                             <label className='mx-2'>
                                 Username
@@ -78,10 +78,10 @@ export default function ProfileEdit({ userData, updatedData, setUpdatedData, onS
 
                 {/* footer section  */}
                 <footer className='flex items-center justify-end space-x-2 p-3 bg-gray-100 justify-center text-lg font-bold'>
-                            <button className='bg-gray-50 border text-gray-700 hover:bg-gray-100 text-sm font-medium rounded-full px-6 py-2 border-gray-300 '>
+                            <button className='bg-gray-50 border text-gray-700 hover:bg-gray-100 text-sm font-medium rounded-full px-6 py-2 border-gray-300' onClick={onCancel}>
                                 cancel
                             </button>
-                            <button className='bg-black text-white duration-100 hover:bg-gray-800 rounded-full justify-center items-center font-medium border-[1px] px-6 py-2.5 text-base'>
+                            <button className='bg-black text-white duration-100 hover:bg-gray-800 rounded-full justify-center items-center font-medium border-[1px] px-6 py-2.5 text-base' onClick={onSave} >
                                 save Changes
                             </button>
                 </footer>
