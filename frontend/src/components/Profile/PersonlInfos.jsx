@@ -5,7 +5,7 @@ export default function PersonlInfos({email = "ochanglichang@gmail.com", usernam
     return(
         <div className="p-6 bg-red-200  rounded-lg w-full h-[20%] space-y-2">
             {/* for edit button */}
-            <div className="w-full flex justify-between items-center h-1/3 bg-white text-lg font-bold">
+            <div className="w-full flex justify-between items-center h-1/3 bg-white text-lg font-bold ">
                 <p>
                     Personal infos
                 </p>
