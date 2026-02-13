@@ -9,6 +9,7 @@ import RedirectionLine from '../../../components/Auth/RedirectionLine';
 import TermsOfService from '../../../components/UI/TermsOfService';
 import PrivacyPolicy from '../../../components/UI/PrivacyPolicy'
 import Language from '../../../components/UI/Languages';
+import Google from '../../../components/Auth/Google';
 
 export default function SignUp() {
     const url = `${API_BASE_URL}/users/register`;
@@ -92,7 +93,7 @@ export default function SignUp() {
                             </button>
                         </div>
                         <OrDevider />
-                        {/* <SocialButton /> */}
+                        <Google />
                         <RedirectionLine text="already have an account ?" link="/login" linkText="Login" />
                         <TermsOfService
                             onChange={() => setUserTerms(!checkTerms)}

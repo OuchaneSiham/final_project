@@ -6,16 +6,18 @@ import Friend from "./pages/Friends";
 import Profile from "./pages/Profile";
 import Login from "./pages/Auth/Login"
 import SignUp from "./pages/Auth/register";
+import { GoogleOAuthProvider } from '@react-oauth/google'
+
 function App() {
   return (
 
-    // <GoogleOAuthProvider clientId="470373993744-tjq6l6bk7ikvbvl46vpbd12pcqepuctb.apps.googleusercontent.com">     
+    <GoogleOAuthProvider clientId="470373993744-tjq6l6bk7ikvbvl46vpbd12pcqepuctb.apps.googleusercontent.com">     
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
         </Routes>
-    // </GoogleOAuthProvider> 
+    </GoogleOAuthProvider> 
 
   );
 }

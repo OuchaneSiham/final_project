@@ -1,14 +1,7 @@
-// import Input from '../../component/ui/Input';
-// import PasswordInput from '../../component/ui/PasswordInput';
-// import { useState } from "react";
-// import { useNavigate } from 'react-router-dom';
-// import AdminSingin from '../../component/ui/AdminSignIn';
-
 
 import { API_BASE_URL } from '../../../config';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-// import SocialButton from '../../components/Auth/SocialButton';
 
 function Login() {
     const navigate = useNavigate();
