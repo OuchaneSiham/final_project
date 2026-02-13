@@ -1,6 +1,6 @@
 import edit from '../../assets/icons/edit.png'
 
-export default function PersonlInfos({email = "ochanglichang@gmail.com", username = "ochangli", })
+export default function PersonlInfos({onClick = () => alert("edit"),  email = "ochanglichang@gmail.com", username = "ochangli", })
 {
     return(
         <div className="p-6 bg-red-200  rounded-lg w-full h-[20%] space-y-2">
@@ -9,7 +9,8 @@ export default function PersonlInfos({email = "ochanglichang@gmail.com", usernam
                 <p>
                     Personal infos
                 </p>
-                    <button className="px-2 py-2 rounded-full bg-gray-100 flex font-bold rounded-full">
+                    <button className="px-2 py-2 rounded-full bg-gray-100 flex font-bold rounded-full
+                            " onClick={onClick}>
                         Edit profile
                     </button>
             </div>
