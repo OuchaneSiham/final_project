@@ -25,7 +25,7 @@ export default function Profile()
             {isEdit && (
                 
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <ProfileEdit />
+                        <ProfileEdit onAvatarChange={() => alert("canging avatar")}/>
                 </div>)}
 
             <div className="flex flex-row flex-1  bg-[#3E2522]/90 rounded-2xl w-full gap-x-[9px] p-3 min-h-0">

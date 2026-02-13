@@ -1,5 +1,6 @@
 import face from '../../assets/images/face.jpg'
-
+import { PencilIcon } from '@heroicons/react/24/solid';
+import pen from '../../assets/icons/pen.png'
 
 export default function ProfileEdit({onSave, onCancel , onAvatarChange, props})
 {
@@ -16,12 +17,17 @@ export default function ProfileEdit({onSave, onCancel , onAvatarChange, props})
                 <main className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-[1.5fr_1fr] md:divide-x-2 divide-dashed">
                     
                         {/* for the inputs files (username, password, email ...)*/}
-                        <div className=''>
+                        {/* for the Profile Picture and username*/}
+                        <div>
 
                         </div>
-                        {/* for the Profile Picture and username*/}
-                        <div className="bg-white flex flex-col items-center gap-2 p-5">
-                            <img src={face} alt="profile image" className='w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover overflow-hidden border-2 border-gray-100 '  />    
+                        <div className="bg-white flex flex-col items-center gap-2 p-5">              
+                            <div className='relative'>
+                                <img src={face} alt="profile image" className='w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover overflow-hidden border-2 border-gray-100 '  />    
+                                <button className='absolute bottom-0 right-2 sm:w-6 sm:h-6 h-3 w-3 rounded-full flex items-center justify-center bg-gray-100 shadow-md' onClick={onAvatarChange}>
+                                    <img src={pen} alt="edit profile avatar icone" />
+                                </button>
+                            </div>
                             <span class="text-lg font-semibold">ochangli</span>
                         </div>  
 
