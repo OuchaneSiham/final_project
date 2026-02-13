@@ -34,6 +34,7 @@ class GameGateway {
   // ... rest of the code stays the same
 
   handleConnection(socket, request) {
+    console.log("CONNECTING CLIENT");
     const url = request.url;
     const params = new URLSearchParams((url || "")?.split("?")[1] || "");
     const token = params.get("token");
@@ -89,6 +90,12 @@ class GameGateway {
       (c) => c.getRole() === "PLAYER" && c.isDisconnected(),
     );
     if (playersDisconnected.length === 2) {
+      // [...clients.values()].forEach((p) => {
+      //   if (p.getClientId() !== existingClient.getClientId()) {
+      //     p.setRole("SPECTATOR");
+      //     p.setClientId(null);
+      //   }
+      // })
       playersDisconnected.forEach((p) => {
         if (p.getClientId() !== existingClient.getClientId()) {
           p.setRole("SPECTATOR");
@@ -96,14 +103,26 @@ class GameGateway {
         }
       });
     }
-    if (playersDisconnected.length === 1) {
-      if (
-        playersDisconnected[0].getClientId() !== existingClient?.getClientId()
-      ) {
-        playersDisconnected[0].setRole("SPECTATOR");
-        playersDisconnected[0].setClientId(null);
-      }
-    }
+    // if (playersDisconnected.length === 1) {
+    //   // if (
+    //   //   playersDisconnected[0].getClientId() !== existingClient?.getClientId()
+    //   // ) {
+    //   //   clients.get(socket).setRole("SPECTATOR");
+    //   //   clients.get(socket).setRole(null);
+    //   // }
+    //   if (
+    //     playersDisconnected[0].getClientId() !== existingClient?.getClientId()
+    //   ) {
+    //     if (playersConnected === 1) {
+    //       existingClient.setRole()
+    //       playersDisconnected[0].setRole("SPECTATOR");
+    //       playersDisconnected[0].setClientId(null);
+    //     }
+    //   } else {
+    //     playersDisconnected[0].setRole("SPECTATOR");
+    //     playersDisconnected[0].setClientId(null);
+    //   }
+    // }
     if (existingClient) {
       console.log(`Reconnecting client ${userId} in room ${roomId}`);
       const oldEntry = [...clients.entries()].find(
@@ -111,6 +130,10 @@ class GameGateway {
       );
       if (oldEntry) clients.delete(oldEntry[0]);
 
+
+      // const playersConnected = [...clients.values()].filter(
+      //   (c) => c.getRole() === "PLAYER" && !c.isDisconnected(),
+      // );
       existingClient.socket = socket;
       existingClient.setDisconnected(false);
       clients.set(socket, existingClient);
@@ -125,7 +148,7 @@ class GameGateway {
             playersConnected,
             engine.isAIEnabled,
           );
-         const playersReady = [...clients.values()].filter(
+          const playersReady = [...clients.values()].filter(
             (c) => c.getIsReady(),
           ).length;
           if (
@@ -133,9 +156,6 @@ class GameGateway {
             (playersConnected === 1 && engine.isAIEnabled)
           ) {
             engine.state.status = GameStatus.RUNNING;
-          }
-          if (playersConnected === 1 && playersReady === 1 && !engine.isAIEnabled) {
-            engine.state.status = GameStatus.WAITING_OPPONENT;
           }
         }, 3000);
       }
@@ -240,7 +260,7 @@ class GameGateway {
       client.setDisconnected(true);
       if (client.getRole() === "PLAYER") {
         engine.disconnectedClient = client;
-        engine.onPlayerDisconnected(client.getClientId());
+        engine.onPlayerDisconnected(client.getClientId(), room.clients);
       }
     });
   }
@@ -335,19 +355,23 @@ class GameGateway {
         engine.state.status === GameStatus.WAITING_OPPONENT &&
         !engine.aiTimeout
       ) {
-        engine.aiTimeout = setTimeout(() => {
-          const currentPlayers = [...clients.values()].filter(
-            (c) => c.getRole() === "PLAYER" && c.getIsReady(),
-          ).length;
-          if (currentPlayers === 1) {
-            console.log("No opponent found enabling AI in room", roomId);
-            engine.enableAI();
-            room.aiAdded = true; // Denied access to other clients
-            console.log("AI added to room", roomId);
-            this.checkGameStart(roomId);
-          }
-          engine.aiTimeout = null;
-        }, 60000);
+        // const players = [...clients.values()].filter(
+        //   (c) => c.getRole() === "PLAYER",
+        // ).length;
+        // if ()
+          engine.aiTimeout = setTimeout(() => {
+            const currentPlayers = [...clients.values()].filter(
+              (c) => c.getRole() === "PLAYER" && c.getIsReady(),
+            ).length;
+            if (currentPlayers === 1) {
+              console.log("No opponent found enabling AI in room", roomId);
+              engine.enableAI();
+              room.aiAdded = true; // Denied access to other clients
+              console.log("AI added to room", roomId);
+              this.checkGameStart(roomId);
+            }
+            engine.aiTimeout = null;
+          }, 60000);
       }
       // resetScheduled is used to avoid
       // multiple resets being scheduled
