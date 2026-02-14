@@ -3,12 +3,13 @@ import { Routes, Route } from "react-router-dom";
 import Chat from "./pages/chat/Chat";
 // import Landing from "./pages/LandingPage";
 // import Friend from "./pages/Friends";
+import Conversation from "./pages/chat/Conversation";
 function App() {
   return (
 
       <div>
         <Routes>
-          <Route path="/" element={<Chat />} />
+          <Route path="/" element={<Conversation />} />
         </Routes>
 
       </div>

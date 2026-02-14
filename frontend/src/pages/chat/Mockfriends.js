@@ -16,6 +16,37 @@ export const Mockfriends = [
       time: "10:30",
     },
     {
+      avatar:`https://i.pravatar.cc/150?u=${Math.random()}`,
+      id: 2,
+      username: "Bob",
+      lastMessage: "See you tomorrow!",
+      status: "offline",
+      time: "10:30",
+    },
+    {
+      avatar:`https://i.pravatar.cc/150?u=${Math.random()}`,
+      id: 2,
+      username: "Bob",
+      lastMessage: "See you tomorrow!",
+      status: "offline",
+      time: "10:30",
+    },
+    {
+      avatar:`https://i.pravatar.cc/150?u=${Math.random()}`,
+      id: 2,
+      username: "Bob",
+      lastMessage: "See you tomorrow!",
+      status: "offline",
+      time: "10:30",
+    },    {
+      avatar:`https://i.pravatar.cc/150?u=${Math.random()}`,
+      id: 2,
+      username: "Bob",
+      lastMessage: "See you tomorrow!",
+      status: "offline",
+      time: "10:30",
+    },
+    {
         
       id: 3,
       username: "Charlie",
