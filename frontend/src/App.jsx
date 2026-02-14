@@ -65,7 +65,7 @@ function App() {
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </GoogleOAuthProvider>
   );
