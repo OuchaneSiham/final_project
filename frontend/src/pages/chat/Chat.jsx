@@ -1,7 +1,7 @@
 import Navbar from "../../components/UI/NavBar";
 import { useState } from 'react';
 import FriendAvt from '../../components/chat/friendAvatar.jsx';
-import { mockFriends } from "../Friends/mockFriends";
+import { Mockfriends } from "./Mockfriends.js";
 
 // import ChatList from "../../components/chatSideBar/ChatList"; 
 // import face from '../../assets/images/face.jpg'
@@ -34,7 +34,7 @@ import { mockFriends } from "../Friends/mockFriends";
 function ChatHeader()
 {
     return(
-        <header className="tracking-wide border-amber-700/30 text-stone-100 w-full text-[52px] px-4">
+        <header className="tracking-wide border-amber-700/30 text-stone-100 w-full text-[52px] px-4 py-4">
             Chat
         </header>
     );
@@ -43,20 +43,23 @@ function ChatHeader()
 //The ChatList --- Mobile Devices 
 //The friend message Box
 function ChatBox({friends})
-{
+{   
+
     return(
-        <button className="flex items-start w-full bg-white border-1 p-4">
-            <div >
-                <img src={"https://i.pravatar.cc/150?img=1"}
-                        alt="frind face id = z"
-                        className="w-15 h-15 rounded-full overflow-hidden shadow-lg"/>
+        <button className="flex items-start w-full px-2 py-1">
+                
+
+            <div className="py-1">
+                <img src={friends.avatar}
+                        alt={`${friends.userName} avatar`}
+                        className="w-17 h-17 rounded-full overflow-hidden shadow-lg"/>
             </div>
-            <div className="border-1 flex-1 h-full flex flex-col items-start px-4 gap-1">
-                <span className="font-semibold text-base text-[#291C0E] ">Username</span>
+            <div className="flex-1 border-b-1 h-full flex flex-col items-start px-4 gap-1">
+                <span className="font-semibold text-base text-[#291C0E] ">{friends.username}</span>
                 <span className="font-normal text-xs text-[#291C0E]/60 line-clamp-1 ">This is the last dfd jkhdfjkd fhdfjkdhf message</span>
             </div>
             <div className="text-sm py-2">
-                11:30
+                {friends.time}
             </div>
         </button>
     );
@@ -65,34 +68,25 @@ function ChatBox({friends})
 function ChatList({friends})
 {
     return (
-        <main className="flex flex-col bg-[#E1D4C2] border-1 p-4 rounded-4xl flex-1 shadow-xl overflow-y-auto scrollbar-hide">
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
-            <ChatBox friends={friends}/>
+        <main className="flex flex-col bg-[#E1D4C2] border-1 p-4 rounded-t-4xl flex-1 shadow-xl overflow-y-auto scrollbar-hide">
+            {friends.map((friend) => (
+                
+                <ChatBox key={friend.id} friends={friend}/>
+            ))}
 
-            
         </main>
     );
 }
 
 export default function Chat()
 {
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    const [friends, setFriends] = useState(mockFriends);
+    // const [selectedUserId, setSelectedUserId] = useState(null);
+    const [friends, setFriends] = useState(Mockfriends);
 
-    console.log(selectedUserId);
     return(
             <div className="flex flex-col h-screen bg-gradient-to-br from-[#3B2F2F] via-[#7E5C4A] to-[#F2D7B6]">
                <ChatHeader />
-               <ChatList friends={mockFriends}/>
+               <ChatList friends={friends}/>
                
             </div>
         );
