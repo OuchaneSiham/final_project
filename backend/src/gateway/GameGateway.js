@@ -34,11 +34,12 @@ class GameGateway {
   // ... rest of the code stays the same
 
   handleConnection(socket, request) {
-    console.log("CONNECTING CLIENT");
     const url = request.url;
     const params = new URLSearchParams((url || "")?.split("?")[1] || "");
     const token = params.get("token");
-    const roomId = params.get("roomId") || "default-room";
+    // const roomId = params.get("roomId") || "default-room";
+    const roomId = params.get("roomId");
+    const isAiRoom = roomId?.startsWith("ai-");
     if (!token) {
       socket.send(
         JSON.stringify({
@@ -68,12 +69,16 @@ class GameGateway {
     const userId = payload.id || payload.sub;
     const username = payload.username || payload.email || `user_${userId}`;
 
-    // Create room if it doesn't exist
     if (!this.rooms.has(roomId)) {
+      // Create room if it doesn't exist
+      const engine = new GameEngine();
+      if (isAiRoom) {
+        engine.enableAI();
+      }
       this.rooms.set(roomId, {
-        engine: new GameEngine(),
+        engine,
         clients: new Map(),
-        aiAdded: false, // To control extra users
+        aiAdded: isAiRoom, // To control extra users
       });
       this.startRoomLoop(roomId);
     }
@@ -89,13 +94,10 @@ class GameGateway {
     const playersDisconnected = [...clients.values()].filter(
       (c) => c.getRole() === "PLAYER" && c.isDisconnected(),
     );
-    if (playersDisconnected.length === 2) {
-      // [...clients.values()].forEach((p) => {
-      //   if (p.getClientId() !== existingClient.getClientId()) {
-      //     p.setRole("SPECTATOR");
-      //     p.setClientId(null);
-      //   }
-      // })
+    // const playersConnected = [...clients.values()].filter(
+    //   (c) => c.getRole() === "PLAYER" && !c.isDisconnected(),
+    // );
+    if (existingClient && playersDisconnected.length > 0) {
       playersDisconnected.forEach((p) => {
         if (p.getClientId() !== existingClient.getClientId()) {
           p.setRole("SPECTATOR");
@@ -104,19 +106,17 @@ class GameGateway {
       });
     }
     // if (playersDisconnected.length === 1) {
-    //   // if (
-    //   //   playersDisconnected[0].getClientId() !== existingClient?.getClientId()
-    //   // ) {
-    //   //   clients.get(socket).setRole("SPECTATOR");
-    //   //   clients.get(socket).setRole(null);
-    //   // }
     //   if (
     //     playersDisconnected[0].getClientId() !== existingClient?.getClientId()
     //   ) {
-    //     if (playersConnected === 1) {
-    //       existingClient.setRole()
+    //     // if (playersConnected === 1) {
+    //       const disconnectedPlayerId = playersDisconnected[0].getClientId();
     //       playersDisconnected[0].setRole("SPECTATOR");
     //       playersDisconnected[0].setClientId(null);
+    //       existingClient.setRole("PLAYER");
+    //       existingClient.setClientId(disconnectedPlayerId);
+    //       // playersDisconnected[0].setRole("SPECTATOR");
+    //       // playersDisconnected[0].setClientId(null);
     //     }
     //   } else {
     //     playersDisconnected[0].setRole("SPECTATOR");
@@ -129,7 +129,6 @@ class GameGateway {
         ([_, c]) => c === existingClient,
       );
       if (oldEntry) clients.delete(oldEntry[0]);
-
 
       // const playersConnected = [...clients.values()].filter(
       //   (c) => c.getRole() === "PLAYER" && !c.isDisconnected(),
@@ -148,12 +147,13 @@ class GameGateway {
             playersConnected,
             engine.isAIEnabled,
           );
-          const playersReady = [...clients.values()].filter(
-            (c) => c.getIsReady(),
+          const playersReady = [...clients.values()].filter((c) =>
+            c.getIsReady(),
           ).length;
           if (
-            (playersConnected === 2 && playersReady === 2) ||
-            (playersConnected === 1 && engine.isAIEnabled)
+            !engine.gamePaused &&
+            ((playersConnected === 2 && playersReady === 2) ||
+              (playersConnected === 1 && engine.isAIEnabled))
           ) {
             engine.state.status = GameStatus.RUNNING;
           }
@@ -201,7 +201,7 @@ class GameGateway {
       socket.send(
         JSON.stringify({ type: ServerMessageType.ASSIGN_ID, playerId }),
       );
-      if (engine.aiTimeout) {
+      if (engine.aiTimeout && !isAiRoom) {
         clearTimeout(engine.aiTimeout);
         engine.aiTimeout = null;
         engine.disableAI();
@@ -287,13 +287,29 @@ class GameGateway {
         }
         break;
       case ClientMessageType.PLAYER_INPUT:
-        if (client.getRole() === "PLAYER") {
+        if (
+          client.getRole() === "PLAYER" &&
+          room.engine.state.status === GameStatus.RUNNING
+        ) {
           room.engine.handlePlayerInput(client.getClientId(), payload.action);
         }
         break;
       case ClientMessageType.PLAYER_INPUT_STOP:
-        if (client.getRole() === "PLAYER") {
+        if (
+          client.getRole() === "PLAYER" &&
+          room.engine.state.status === GameStatus.RUNNING
+        ) {
           room.engine.handlePlayerInputStop(client.getClientId());
+        }
+        break;
+      case ClientMessageType.PAUSE_GAME:
+        if (client.getRole() === "PLAYER") {
+          room.engine.pauseGame(client.getClientId());
+        }
+        break;
+      case ClientMessageType.RESUME_GAME:
+        if (client.getRole() === "PLAYER") {
+          room.engine.resumeGame();
         }
         break;
       default:
@@ -305,24 +321,37 @@ class GameGateway {
     const room = this.rooms.get(roomId);
     const engine = room.engine;
     const clients = room.clients;
+    if (engine.waitingOpponentTimeout) {
+      clearTimeout(engine.waitingOpponentTimeout);
+      engine.waitingOpponentTimeout = null;
+    }
     const readyPlayers = [...clients.values()].filter(
       (c) => c.getRole() === "PLAYER" && c.getIsReady(),
     );
 
     // Check if the AI is enabled
     const aiEnabled = engine.isAIEnabled;
+    // const isAiRoom = roomId.startsWith("ai-");
+    // if (isAiRoom) {
+    //   clients.forEach((c) => {
+    //     c.setIsReady(true);
+    //   });
+    // }
 
     if (
-      (readyPlayers.length === 2 || (readyPlayers.length === 1 && aiEnabled)) &&
-      (engine.state.status === GameStatus.WAITING ||
-        engine.state.status === GameStatus.WAITING_OPPONENT)
+      readyPlayers.length === 2 ||
+      (readyPlayers.length === 1 &&
+        aiEnabled &&
+        (engine.state.status === GameStatus.WAITING ||
+          engine.state.status === GameStatus.WAITING_OPPONENT))
     ) {
       engine.startGame();
       // Immediately send the snapshot to avoid sync problems
       this.broadcastSnapshot(roomId);
     } else if (
       readyPlayers.length === 1 &&
-      engine.state.status === GameStatus.WAITING
+      engine.state.status === GameStatus.WAITING &&
+      !aiEnabled
     ) {
       engine.state.status = GameStatus.WAITING_OPPONENT;
     }
@@ -331,6 +360,7 @@ class GameGateway {
   // This function executes a game loop for each room
   startRoomLoop(roomId) {
     const room = this.rooms.get(roomId);
+    const isAiRoom = roomId.startsWith("ai-");
     const engine = room.engine;
 
     const FPS = 60;
@@ -342,7 +372,7 @@ class GameGateway {
       const deltaTime = (currentTime - lastUpdateTime) / 1000;
       lastUpdateTime = currentTime;
 
-      engine.update(deltaTime);
+      engine.update(deltaTime, isAiRoom);
       this.broadcastSnapshot(roomId);
 
       // When a game is finished,
@@ -351,27 +381,43 @@ class GameGateway {
       // introduce AI opponent if no one has joined
       // the room.
       const clients = room.clients;
+      const players = [...clients.values()].filter(
+        (c) => c.getRole() === "PLAYER" && !c.isDisconnected(),
+      );
+      if (
+        players.length == 2 &&
+        engine.state.status === GameStatus.WAITING_OPPONENT &&
+        !engine.waitingOpponentTimeout
+      ) {
+        engine.waitingOpponentTimeout = setTimeout(() => {
+          players.forEach((p) => p.setIsReady(false));
+          engine.state.status = GameStatus.WAITING;
+          engine.waitingOpponentTimeout = null;
+        }, 60000);
+      }
       if (
         engine.state.status === GameStatus.WAITING_OPPONENT &&
-        !engine.aiTimeout
+        !engine.aiTimeout &&
+        players.length === 1 &&
+        !isAiRoom
       ) {
-        // const players = [...clients.values()].filter(
-        //   (c) => c.getRole() === "PLAYER",
-        // ).length;
-        // if ()
-          engine.aiTimeout = setTimeout(() => {
-            const currentPlayers = [...clients.values()].filter(
-              (c) => c.getRole() === "PLAYER" && c.getIsReady(),
-            ).length;
-            if (currentPlayers === 1) {
-              console.log("No opponent found enabling AI in room", roomId);
-              engine.enableAI();
-              room.aiAdded = true; // Denied access to other clients
-              console.log("AI added to room", roomId);
-              this.checkGameStart(roomId);
-            }
-            engine.aiTimeout = null;
-          }, 60000);
+        engine.aiTimeout = setTimeout(() => {
+          const currentPlayers = [...clients.values()].filter(
+            (c) => c.getRole() === "PLAYER" && c.getIsReady(),
+          );
+          if (currentPlayers.length === 1) {
+            const playerToControlId =
+              currentPlayers[0].getClientId() === "player1"
+                ? "player2"
+                : "player1";
+            console.log("No opponent found enabling AI in room", roomId);
+            engine.enableAI(playerToControlId);
+            room.aiAdded = true; // Denied access to other clients
+            console.log("AI added to room", roomId);
+            this.checkGameStart(roomId);
+          }
+          engine.aiTimeout = null;
+        }, 60000);
       }
       // resetScheduled is used to avoid
       // multiple resets being scheduled
@@ -381,6 +427,10 @@ class GameGateway {
         resetScheduled = true;
         setTimeout(() => {
           resetScheduled = false;
+          if (!isAiRoom) {
+            room.aiAdded = false;
+            engine.disableAI();
+          }
           engine.resetGame();
           room.clients.forEach((c) => c.setIsReady(false));
           this.broadcastSnapshot(roomId);
