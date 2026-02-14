@@ -16,18 +16,20 @@ export default function Profile()
     const [isEdit, setEdit] = useState(false); // The user trigger the Edit Profile button.
 
     return(
-        <div className="flex items-center h-screen flex-col h-screen bg-[#3E2522]/90 py-[5px] px-[20px]">
+        <div className="flex items-center h-screen flex-col bg-[#3E2522]/90 py-[5px] px-[20px]">
             <Navbar/>
             <p className="text-3xl font-bold text-amber-100 tracking-wide mb-6 drop-shadow-lg">
-                Profile
+                My Profile
             </p>
+
             {/* rendring the Edit card if it is clicked */}
             {isEdit && (
-                
-                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <ProfileEdit />
-                </div>)}
-
+                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={setEdit(false)}>
+                        <ProfileEdit onCancel={setEdit(false)}/>
+                </div>)
+            }
+            
+            {/* The global  */}
             <div className="flex flex-row flex-1  bg-[#3E2522]/90 rounded-2xl w-full gap-x-[9px] p-3 min-h-0">
                 {/* left side profile*/}
                 <aside className="flex flex-col w-3/4 space-y-2 flex-1 bg-white rounded-3xl bg-gradient-to-br from-[#b67a49] via-[#cfa46d] to-[#e6e3a3 space-y-">
