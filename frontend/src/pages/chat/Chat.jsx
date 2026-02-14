@@ -1,7 +1,7 @@
 import Navbar from "../../components/UI/NavBar";
-import { mockFriends } from "../Friends/mockFriends";
 import { useState } from 'react';
 import FriendAvt from '../../components/chat/friendAvatar.jsx';
+import { mockFriends } from "../Friends/mockFriends";
 
 // import ChatList from "../../components/chatSideBar/ChatList"; 
 // import face from '../../assets/images/face.jpg'
@@ -31,6 +31,55 @@ import FriendAvt from '../../components/chat/friendAvatar.jsx';
 
 
 //This component for the Chat Header --- Mobile Devoces --- 
+function ChatHeader()
+{
+    return(
+        <header className="tracking-wide border-amber-700/30 text-stone-100 w-full text-[52px] px-4">
+            Chat
+        </header>
+    );
+}
+
+//The ChatList --- Mobile Devices 
+//The friend message Box
+function ChatBox({friends})
+{
+    return(
+        <button className="flex items-start w-full bg-white border-1 p-4">
+            <div >
+                <img src={"https://i.pravatar.cc/150?img=1"}
+                        alt="frind face id = z"
+                        className="w-15 h-15 rounded-full overflow-hidden shadow-lg"/>
+            </div>
+            <div className="border-1 flex-1 h-full flex flex-col items-start px-4 gap-1">
+                <span>Username</span>
+                <span>This is the last message</span>
+            </div>
+        </button>
+    );
+}
+
+function ChatList({friends})
+{
+    return (
+        <main className="flex flex-col bg-[#E1D4C2] border-1 p-4 rounded-4xl flex-1 shadow-xl overflow-y-auto scrollbar-hide">
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+            <ChatBox friends={friends}/>
+
+            
+        </main>
+    );
+}
+
 export default function Chat()
 {
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -39,6 +88,8 @@ export default function Chat()
     console.log(selectedUserId);
     return(
             <div className="flex flex-col h-screen bg-gradient-to-br from-[#3B2F2F] via-[#7E5C4A] to-[#F2D7B6]">
+               <ChatHeader />
+               <ChatList friends={mockFriends}/>
                
             </div>
         );
