@@ -52,8 +52,11 @@ function ChatBox({friends})
                         className="w-15 h-15 rounded-full overflow-hidden shadow-lg"/>
             </div>
             <div className="border-1 flex-1 h-full flex flex-col items-start px-4 gap-1">
-                <span>Username</span>
-                <span>This is the last message</span>
+                <span className="font-semibold text-base text-[#291C0E] ">Username</span>
+                <span className="font-normal text-xs text-[#291C0E]/60 line-clamp-1 ">This is the last dfd jkhdfjkd fhdfjkdhf message</span>
+            </div>
+            <div className="text-sm py-2">
+                11:30
             </div>
         </button>
     );
