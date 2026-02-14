@@ -46,7 +46,7 @@ function ChatBox({friends})
 {   
 
     return(
-        <button className="flex items-start w-full px-2 py-1">
+        <button className="flex items-start w-full px-2 py-1 border-[0.5px] rounded-2xl gap-0.5">
                 
 
             <div className="py-1">
@@ -54,7 +54,7 @@ function ChatBox({friends})
                         alt={`${friends.userName} avatar`}
                         className="w-17 h-17 rounded-full overflow-hidden shadow-lg"/>
             </div>
-            <div className="flex-1 border-b-1 h-full flex flex-col items-start px-4 gap-1">
+            <div className="flex-1  h-full flex flex-col items-start py-2 px-4 gap-1">
                 <span className="font-semibold text-base text-[#291C0E] ">{friends.username}</span>
                 <span className="font-normal text-xs text-[#291C0E]/60 line-clamp-1 ">This is the last dfd jkhdfjkd fhdfjkdhf message</span>
             </div>
@@ -68,7 +68,7 @@ function ChatBox({friends})
 function ChatList({friends})
 {
     return (
-        <main className="flex flex-col bg-[#E1D4C2] border-1 p-4 rounded-t-4xl flex-1 shadow-xl overflow-y-auto scrollbar-hide">
+        <main className="flex flex-col gap-y-[3px] bg-[#E1D4C2] border-1 p-4 rounded-t-4xl flex-1 shadow-xl overflow-y-auto scrollbar-hide">
             {friends.map((friend) => (
                 
                 <ChatBox key={friend.id} friends={friend}/>
@@ -87,7 +87,7 @@ export default function Chat()
             <div className="flex flex-col h-screen bg-gradient-to-br from-[#3B2F2F] via-[#7E5C4A] to-[#F2D7B6]">
                <ChatHeader />
                <ChatList friends={friends}/>
-               
+                
             </div>
         );
 }
