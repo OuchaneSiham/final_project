@@ -10,6 +10,9 @@ export default function ProfileHeader({userAvatar, handlleLogout})
     //DropDown state;
     const [isDropdownOpen, setisDropdownOpen] = useState(false);
     return(
+
+        //This is for the search Bar !!
+        
         <header className="flex justify-between items-center  w-full h-[60px] py-[8px] px-[12px]">
             <button type="button" className='w-[28px] h-[28px] opacity-100 hover:opacity-70 border-1 transition-opacity duration-300'>
                 <img src={backArrow} alt="back arrow" />

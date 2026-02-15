@@ -6,6 +6,10 @@ import Loading from "./Loading";
 import ProfileHeader from "./components/Profile/ProfileHeader";
 import EditProfileButton from './components/Profile/EditProfileButton'
 import useLogout from './hooks/Profile/useLogout'
+import SearchBar from "./components/Profile/SearchBar";
+import TabButtons from "./components/Profile/TabButtons";
+import FriendsView from "./components/Profile/FriendsView";
+import PendingView from "./components/Profile/PendingView";
 
 function Profile() {
   const urlme = `${API_BASE_URL}/users/me`;
@@ -20,6 +24,7 @@ function Profile() {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [activeView, setActiveView] = useState("profile"); 
 
   const fetchPending = async () => {
     const getToken = localStorage.getItem("token");
@@ -265,13 +270,31 @@ useEffect(() => {
 }, []);
   if (!userData) return <Loading />;
   
+  // Conditional rendering based on activeView state
+  if (activeView === "friends") {
+    return (
+      <FriendsView
+        onBack={() => setActiveView("profile")}
+      />
+    );
+  }
+
+  if (activeView === "pending") {
+    return (
+      <PendingView
+        onBack={() => setActiveView("profile")}
+      />
+    );
+  }
+
+  // Default profile view
   return (
         <div className="flex flex-col items-center min-h-screen bg-[linear-gradient(to_bottom,#162D2A,#2F3A32,#3E2411)]">
           
           <ProfileHeader  handlleLogout={handleLogout}
                           userAvatar={`https://localhost:8443${userData.avatar}`}
           />
-
+          {/* <SearchBar /> */}
           {/* photo and name*/}
           <div className="flex flex-col items-center pt-[40px] px-[30px] gap-1 pb-[24px]">
             {/*photo of profile*/}
@@ -291,6 +314,9 @@ useEffect(() => {
 
           {/* Edit Profile */}
           <EditProfileButton />
+          
+          {/* Friends and Requests Tab Buttons */}
+          <TabButtons onSelectView={setActiveView} />
         </div>
 
 
