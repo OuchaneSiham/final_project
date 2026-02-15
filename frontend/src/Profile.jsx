@@ -279,25 +279,23 @@ useEffect(() => {
   
   return (
         <div className="flex flex-col items-center min-h-screen bg-[linear-gradient(to_bottom,#162D2A,#2F3A32,#3E2411)]">
-          <ProfileHeader/>
+          
+          <ProfileHeader userAvatar={`https://localhost:8443${userData.avatar}`}/>
 
           {/* photo and name*/}
           <div className="flex flex-col items-center pt-[40px] px-[30px] gap-1 pb-[24px]">
             {/*photo of profile*/}
             <div className="relative h-[150px] w-[150px] rounded-full ease-in-out overflow-hidden">
-              <img src={face}
-                    alt="Profile picture`"
+              <img src={`https://localhost:8443${userData.avatar}`}
+                    alt="Profile picture"
                     className="w-full h-full object-cover"
               />
-              <div className="absolute rounded-full w-12 h-12 bg-white ">
-                x
-              </div>
             </div>
             <div className="text-white uppercase text-[32px] font-bold tracking-[1px] mt-[16px] shadow-lg">
-              Ochangli
+              {userData.username}
             </div>
             <div className="text-[#B0B0B0] text-[16px] mt-[8px] ">
-              changlichan2@gmail.com
+              {userData.email}
             </div>
           </div>
 

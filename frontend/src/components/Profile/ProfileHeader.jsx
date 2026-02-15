@@ -5,7 +5,7 @@ import ProfileDropdown from './ProfileDropdown'
 
 
 
-export default function ProfileHeader()
+export default function ProfileHeader({userAvatar})
 {
     //DropDown state;
     const [isDropdownOpen, setisDropdownOpen] = useState(true);
@@ -24,7 +24,7 @@ export default function ProfileHeader()
                         className='relative cursor-pointer border-[#FFFFFF4D] border-[2px] rounded-full w-[36px] h-[36px] ease-in-out overflow-hidden '
                         onClick={() => setisDropdownOpen(prev => !prev)}
                 >
-                    <img src={face}
+                    <img src={userAvatar}
                             alt="the user avatar"
                             className='w-full h-full object-cover'
                     />
