@@ -4,7 +4,10 @@ import { socket } from "./socket";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import ProfileHeader from "./components/Profile/ProfileHeader";
-import face from '../src/Assets/images/face.jpg'
+import EditProfileButton from './components/Profile/EditProfileButton'
+import face from '../src/Assets/images/face.jpg';
+
+
 function Profile() {
   const urlme = `${API_BASE_URL}/users/me`;
   const urlup = `${API_BASE_URL}/users/update`;
@@ -275,7 +278,7 @@ useEffect(() => {
   if (!userData) return <Loading />;
   
   return (
-        <div className="min-h-screen bg-[linear-gradient(to_bottom,#162D2A,#2F3A32,#3E2411)]">
+        <div className="flex flex-col items-center min-h-screen bg-[linear-gradient(to_bottom,#162D2A,#2F3A32,#3E2411)]">
           <ProfileHeader/>
 
           {/* photo and name*/}
@@ -297,6 +300,9 @@ useEffect(() => {
               changlichan2@gmail.com
             </div>
           </div>
+
+          {/* Edit Profile */}
+          <EditProfileButton />
         </div>
 
 
