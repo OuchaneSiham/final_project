@@ -315,13 +315,17 @@ fastify.post("/google-auth", async function (request, reply) {
                     },
                     id:{
                         not: request.user.id,
-                    }
+                    },
+                    role: {
+                    not: "admin"
+                }
                 },
                 select:{
                     username: true,
                     id: true,
                     avatar: true,
                 }
+                
             })
             reply.status(200).send({data});
         }
@@ -347,6 +351,10 @@ fastify.post("/google-auth", async function (request, reply) {
         
         if (!targetUser) {
             return reply.status(404).send({error: "User not found"});
+        }
+        if (targetUser.role === "admin")
+        {
+            return reply.status(403).send({ error: "You cannot add an administrator as a friend" });
         }
         const existingFriendship = await prisma.friendship.findFirst({
             where: {
