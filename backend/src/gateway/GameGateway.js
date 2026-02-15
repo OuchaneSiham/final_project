@@ -8,12 +8,14 @@ const { WebSocketServer } = require("ws");
 const GameClient = require("../game/GameClient");
 const dotenv = require("dotenv");
 const GameEngine = require("../game/GameEngine");
+const prisma = require('../config/db.js');
 
 dotenv.config();
 // import GameEngine from "../game/GameEngine.js";
 
 // Change the constructor in GameGateway.js
 class GameGateway {
+  deleteRoomTimeouts = new Map();
   wss;
   rooms = new Map();
   frameIntervals = new Map();
@@ -82,7 +84,17 @@ class GameGateway {
       });
       this.startRoomLoop(roomId);
     }
-
+    // Check if the room is not in deleteRoomTimeouts,
+    // if it is in; clear the timeout and remove it
+    // from the deleteRoomTimeouts Map as a new or existing
+    // client is joining the room before the timeout is executed
+    if (this.deleteRoomTimeouts.has(roomId)) {
+      clearTimeout(this.deleteRoomTimeouts.get(roomId));
+      this.deleteRoomTimeouts.delete(roomId);
+      console.log(
+        `Delete timeout cleared for room ${roomId} as a client joined`,
+      );
+    }
     const room = this.rooms.get(roomId);
     const clients = room.clients;
     const engine = room.engine;
@@ -372,7 +384,7 @@ class GameGateway {
       const deltaTime = (currentTime - lastUpdateTime) / 1000;
       lastUpdateTime = currentTime;
 
-      engine.update(deltaTime, isAiRoom);
+      engine.update(deltaTime, isAiRoom, room.clients, roomId);
       this.broadcastSnapshot(roomId);
 
       // When a game is finished,
@@ -381,6 +393,38 @@ class GameGateway {
       // introduce AI opponent if no one has joined
       // the room.
       const clients = room.clients;
+      // Check the number of clients in the room
+      // and there is no more client set a timeout
+      // to clear the room after 10 minutes of
+      // inactivity to avoid memory leaks
+      const totalClients = clients.size;
+      const activeClients = [...clients.values()].filter((c) => {
+        return !c.isDisconnected();
+      });
+      // As deleteRoomTimeouts is global for the class
+      // we need deleteRoomTimeouts as a Map to handle
+      // multiple rooms so we can schedule a delete
+      // for each room independently to avoid deleting
+      // the wrong room when there are multiple rooms.
+      // We can clear the timeout when a new or existing
+      // client joins the room before the timeout is
+      // executed to avoid deleting active rooms.
+      if (totalClients > 0 && activeClients.length === 0) {
+        if (!this.deleteRoomTimeouts.has(roomId)) {
+          const timeout = setTimeout(
+            () => {
+              this.rooms.delete(roomId);
+              clearInterval(this.frameIntervals.get(roomId));
+              this.frameIntervals.delete(roomId);
+              this.deleteRoomTimeouts.delete(roomId);
+              console.log(`Room ${roomId} deleted due to inactivity`);
+            },
+            10 * 60 * 1000,
+          ); // 10 minutes before deleting the room if there are no active clients
+          this.deleteRoomTimeouts.set(roomId, timeout);
+        }
+        return;
+      }
       const players = [...clients.values()].filter(
         (c) => c.getRole() === "PLAYER" && !c.isDisconnected(),
       );
@@ -400,7 +444,8 @@ class GameGateway {
         !engine.aiTimeout &&
         players.length === 1 &&
         !isAiRoom
-      ) {
+      )
+      {
         engine.aiTimeout = setTimeout(() => {
           const currentPlayers = [...clients.values()].filter(
             (c) => c.getRole() === "PLAYER" && c.getIsReady(),
@@ -425,6 +470,11 @@ class GameGateway {
       // haven't left the room yet
       if (engine.state.status === GameStatus.FINISHED && !resetScheduled) {
         resetScheduled = true;
+        if(!isAiRoom && !engine.player1.isAi && !engine.player2.isAi)
+        {
+          this.recordMatchStats(engine.getMatchStats());
+        }
+        // this.recordMatchStats(engine.getMatchStats());
         setTimeout(() => {
           resetScheduled = false;
           if (!isAiRoom) {
@@ -483,6 +533,64 @@ class GameGateway {
         snapshot: { ...data.snapshot, you: "SPECTATOR" },
       });
     }
+  }
+  // Function to record match stats when a game ends
+  async recordMatchStats(stats) {
+    // stats will contain information like winner userId
+    // loser winner userId, winner score, loser score,
+    // roomId, matchId, date.
+    // Variables to holds the stats to record in the database
+
+    // const roomId = stats.roomId;
+    // const matchId = stats.matchId;
+    // const winnerUserId = stats.winnerUserId;
+    // const loserUserId = stats.loserUserId;
+    // const winnerScore = stats.winnerScore;
+    // const loserScore = stats.loserScore;
+    // const date = stats.date;
+    const winnerId = parseInt(stats.winnerUserId);
+    const loserId = parseInt(stats.loserUserId);
+    const winnerScore = stats.winnerScore;
+    const loserScore = stats.loserScore;
+    try{
+      await prisma.$transaction([
+        prisma.match.create({
+          data:{
+            winnerId:winnerId,
+            loserId:loserId,
+            winnerScore:winnerScore,
+            loserScore:loserScore
+          }
+        }),
+        prisma.user.update({
+          where: { id: winnerId },
+          data: { totalWins: { increment: 1 } }
+        }),
+        prisma.user.update({
+          where: { id: loserId },
+          data: { totalLosses: { increment: 1 } }
+        })
+      ])
+      console.log(`Match recorded for Users ${winnerId} and ${loserId}`);
+
+    }
+    catch (error) {
+      console.error("Database Error recording match:", error);
+    }
+    // For each user increment the total games played 
+    //  for the winner increment the total games won 
+    // for the loser increment the total games lost 
+    // you can record other stats if you have 
+    // fields for them in the database. 
+    // You can use total won to calculate the win rate. 
+    // You can use the scores to calculate the average 
+    // score for each player(hint: you need to store the 
+    // total score for each player and the total games played
+    // to calculate the average score). 
+    // Just an Idea no need to implement all listed above.
+    // Here I am stuck; I need your help Siham
+    // Prisma needed here to record the stats in the
+    // database.
   }
 }
 
