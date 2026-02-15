@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import ProfileHeader from "./components/Profile/ProfileHeader";
 import EditProfileButton from './components/Profile/EditProfileButton'
-import face from '../src/Assets/images/face.jpg';
-
+import useLogout from './hooks/Profile/useLogout'
 
 function Profile() {
   const urlme = `${API_BASE_URL}/users/me`;
@@ -21,6 +20,7 @@ function Profile() {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   const fetchPending = async () => {
     const getToken = localStorage.getItem("token");
     try {
@@ -141,22 +141,10 @@ function Profile() {
       console.error(err);
     }
   };
-  const handleLogout = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      await fetch(`${API_BASE_URL}/users/logout`, {
-        method: "POST",
-        headers: { Authorization: "Bearer " + token },
-      });
-    } catch (err) {
-      console.error("HTTP logout failed", err);
-    }
-    if (socket) {
-      socket.disconnect();
-    }
-    localStorage.removeItem("token");
-    navigate("/");
-  };
+
+  //Logout 
+  const handleLogout = useLogout(navigate);
+
 
   const handleSearch = async () => {
     const getToken = localStorage.getItem("token");
@@ -280,7 +268,9 @@ useEffect(() => {
   return (
         <div className="flex flex-col items-center min-h-screen bg-[linear-gradient(to_bottom,#162D2A,#2F3A32,#3E2411)]">
           
-          <ProfileHeader userAvatar={`https://localhost:8443${userData.avatar}`}/>
+          <ProfileHeader  handlleLogout={handleLogout}
+                          userAvatar={`https://localhost:8443${userData.avatar}`}
+          />
 
           {/* photo and name*/}
           <div className="flex flex-col items-center pt-[40px] px-[30px] gap-1 pb-[24px]">
